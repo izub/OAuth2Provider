@@ -10,7 +10,7 @@ use Zend\ServiceManager\ServiceManager;
 /**
  * ControllerFactory test case.
  */
-class ControllerFactoryTest extends \PHPUnit_Framework_TestCase
+class ControllerFactoryTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var ControllerFactory

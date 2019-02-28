@@ -9,7 +9,7 @@ use Zend\ServiceManager\ServiceManager;
 /**
  * AuthorizationCodeFactory test case.
  */
-class AuthorizationCodeFactoryTest extends \PHPUnit_Framework_TestCase
+class AuthorizationCodeFactoryTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var AuthorizationCodeFactory

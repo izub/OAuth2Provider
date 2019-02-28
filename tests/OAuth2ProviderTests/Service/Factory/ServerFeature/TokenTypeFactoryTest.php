@@ -1,7 +1,6 @@
 <?php
 namespace OAuth2ProviderTests;
 
-use OAuth2\TokenType\Bearer;
 use OAuth2Provider\Containers\TokenTypeContainer;
 use OAuth2Provider\Options\ServerFeatureTypeConfiguration;
 use OAuth2Provider\Options\TokenType\BearerConfigurations;
@@ -12,7 +11,7 @@ use Zend\ServiceManager\ServiceManager;
 /**
  * TokenTypeFactory test case.
  */
-class TokenTypeFactoryTest extends \PHPUnit_Framework_TestCase
+class TokenTypeFactoryTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var TokenTypeFactory

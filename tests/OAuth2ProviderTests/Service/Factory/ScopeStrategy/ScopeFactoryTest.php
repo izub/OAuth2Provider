@@ -1,7 +1,6 @@
 <?php
 namespace OAuth2ProviderTests;
 
-use OAuth2\Scope;
 use OAuth2Provider\Containers\StorageContainer;
 use OAuth2Provider\Options\ScopeType\ScopeConfigurations;
 use OAuth2Provider\Service\Factory\ScopeStrategy\ScopeFactory;
@@ -10,7 +9,7 @@ use Zend\ServiceManager\ServiceManager;
 /**
  * ScopeFactory test case.
  */
-class ScopeFactoryTest extends \PHPUnit_Framework_TestCase
+class ScopeFactoryTest extends \PHPUnit\Framework\TestCase
 {
     /**
      *

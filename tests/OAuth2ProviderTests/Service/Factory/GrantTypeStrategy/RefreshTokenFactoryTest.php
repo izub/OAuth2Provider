@@ -9,7 +9,7 @@ use Zend\ServiceManager\ServiceManager;
 /**
  * RefreshTokenFactory test case.
  */
-class RefreshTokenFactoryTest extends \PHPUnit_Framework_TestCase
+class RefreshTokenFactoryTest extends \PHPUnit\Framework\TestCase
 {
 
     /**

@@ -8,7 +8,7 @@ use Zend\ServiceManager\ServiceManager;
 /**
  * BearerFactory test case.
  */
-class BearerFactoryTest extends \PHPUnit_Framework_TestCase
+class BearerFactoryTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var BearerFactory

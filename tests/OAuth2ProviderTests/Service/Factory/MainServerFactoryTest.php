@@ -4,14 +4,12 @@ namespace OAuth2ProviderTests;
 use OAuth2Provider\Options\Configuration;
 use OAuth2Provider\Server;
 use OAuth2Provider\Service\Factory\MainServerFactory;
-
 use Zend\ServiceManager\ServiceManager;
-use Zend\Stdlib\ArrayUtils;
 
 /**
  * MainServerFactory test case.
  */
-class MainServerFactoryTest extends \PHPUnit_Framework_TestCase
+class MainServerFactoryTest extends \PHPUnit\Framework\TestCase
 {
     /**
      *

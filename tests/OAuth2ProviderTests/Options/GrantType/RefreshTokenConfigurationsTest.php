@@ -6,7 +6,7 @@ use OAuth2Provider\Options\GrantType\RefreshTokenConfigurations;
 /**
  * RefreshTokenConfigurations test case.
  */
-class RefreshTokenConfigurationsTest extends \PHPUnit_Framework_TestCase
+class RefreshTokenConfigurationsTest extends \PHPUnit\Framework\TestCase
 {
 
     /**

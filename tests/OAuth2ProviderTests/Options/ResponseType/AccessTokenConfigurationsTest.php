@@ -6,7 +6,7 @@ use OAuth2Provider\Options\ResponseType\AccessTokenConfigurations;
 /**
  * AccessTokenConfigurations test case.
  */
-class AccessTokenConfigurationsTest extends \PHPUnit_Framework_TestCase
+class AccessTokenConfigurationsTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var AccessTokenConfigurations

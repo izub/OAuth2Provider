@@ -1,7 +1,6 @@
 <?php
 namespace OAuth2ProviderTests;
 
-use OAuth2\GrantType\UserCredentials;
 use OAuth2Provider\Builder\StrategyBuilder;
 use OAuth2Provider\Containers\GrantTypeContainer;
 use OAuth2Provider\Containers\StorageContainer;
@@ -15,7 +14,7 @@ use Zend\ServiceManager\ServiceManager;
 /**
  * GrantTypeFactory test case.
  */
-class StrategyBuilderTest extends \PHPUnit_Framework_TestCase
+class StrategyBuilderTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * Prepares the environment before running a test.

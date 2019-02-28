@@ -6,7 +6,7 @@ use OAuth2Provider\Options\ResponseType\AuthorizationCodeConfigurations;
 /**
  * AuthorizationCodeConfigurations test case.
  */
-class AuthorizationCodeConfigurationsTest extends \PHPUnit_Framework_TestCase
+class AuthorizationCodeConfigurationsTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var AuthorizationCodeConfigurations

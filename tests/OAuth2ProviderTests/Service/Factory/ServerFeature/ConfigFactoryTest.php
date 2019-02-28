@@ -8,7 +8,7 @@ use Zend\ServiceManager\ServiceManager;
 /**
  * ConfigFactory test case.
  */
-class ConfigFactoryTest extends \PHPUnit_Framework_TestCase
+class ConfigFactoryTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var ConfigFactory

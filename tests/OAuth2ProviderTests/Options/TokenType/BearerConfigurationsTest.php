@@ -6,7 +6,7 @@ use OAuth2Provider\Options\TokenType\BearerConfigurations;
 /**
  * BearerConfigurations test case.
  */
-class BearerConfigurationsTest extends \PHPUnit_Framework_TestCase
+class BearerConfigurationsTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var BearerConfigurations

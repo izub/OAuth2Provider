@@ -2,7 +2,6 @@
 namespace OAuth2ProviderTests;
 
 use OAuth2Provider\Containers\RequestContainer;
-use OAuth2Provider\Containers\ResponseContainer;
 use OAuth2Provider\Options\Configuration;
 use OAuth2Provider\Service\AbstractFactory\RequestAbstractFactory;
 use Zend\ServiceManager\ServiceManager;
@@ -10,7 +9,7 @@ use Zend\ServiceManager\ServiceManager;
 /**
  * RequestAbstractFactory test case.
  */
-class RequestAbstractFactoryTest extends \PHPUnit_Framework_TestCase
+class RequestAbstractFactoryTest extends \PHPUnit\Framework\TestCase
 {
 
     /**

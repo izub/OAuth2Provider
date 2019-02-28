@@ -6,15 +6,14 @@ use OAuth2Provider\Containers\StorageContainer;
 use OAuth2Provider\Options\ClientAssertionType\HttpBasicConfigurations;
 use OAuth2Provider\Options\ServerFeatureTypeConfiguration;
 use OAuth2Provider\Service\Factory\ClientAssertionTypeStrategy\HttpBasicFactory;
-use OAuth2ProviderTests\Bootstrap;
-
 use OAuth2Provider\Service\Factory\ServerFeature\ClientAssertionTypeFactory;
+use OAuth2ProviderTests\Bootstrap;
 use Zend\ServiceManager\ServiceManager;
 
 /**
  * ClientAssertionTypeFactory test case.
  */
-class ClientAssertionTypeFactoryTest extends \PHPUnit_Framework_TestCase
+class ClientAssertionTypeFactoryTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var ClientAssertionTypeFactory

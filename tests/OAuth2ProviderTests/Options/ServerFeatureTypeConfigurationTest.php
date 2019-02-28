@@ -6,7 +6,7 @@ use OAuth2Provider\Options\ServerFeatureTypeConfiguration;
 /**
  * ServerFeatureTypeConfiguration test case.
  */
-class ServerFeatureTypeConfigurationTest extends \PHPUnit_Framework_TestCase
+class ServerFeatureTypeConfigurationTest extends \PHPUnit\Framework\TestCase
 {
 
     /**

@@ -7,7 +7,7 @@ use Zend\ServiceManager\ServiceManager;
 /**
  * ConfigurationFactory test case.
  */
-class ConfigurationFactoryTest extends \PHPUnit_Framework_TestCase
+class ConfigurationFactoryTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var ConfigurationFactory

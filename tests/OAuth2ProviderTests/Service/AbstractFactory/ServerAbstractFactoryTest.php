@@ -1,7 +1,6 @@
 <?php
 namespace OAuth2ProviderTests;
 
-use OAuth2\GrantType\UserCredentials;
 use OAuth2Provider\Containers\ClientAssertionTypeContainer;
 use OAuth2Provider\Containers\ConfigContainer;
 use OAuth2Provider\Containers\GrantTypeContainer;
@@ -13,7 +12,6 @@ use OAuth2Provider\Options\Configuration;
 use OAuth2Provider\Options\GrantType\UserCredentialsConfigurations;
 use OAuth2Provider\Options\ServerConfigurations;
 use OAuth2Provider\Service\AbstractFactory\ServerAbstractFactory;
-
 use OAuth2Provider\Service\Factory\GrantTypeStrategy\UserCredentialsFactory;
 use OAuth2Provider\Service\Factory\ServerFeature\ClientAssertionTypeFactory;
 use OAuth2Provider\Service\Factory\ServerFeature\ConfigFactory;
@@ -22,16 +20,14 @@ use OAuth2Provider\Service\Factory\ServerFeature\ResponseTypeFactory;
 use OAuth2Provider\Service\Factory\ServerFeature\ScopeTypeFactory;
 use OAuth2Provider\Service\Factory\ServerFeature\StorageFactory;
 use OAuth2Provider\Service\Factory\ServerFeature\TokenTypeFactory;
-use OAuth2ProviderTests\Assets\Storage\UserCredentialsStorage;
 use Zend\Mvc\Application;
 use Zend\Mvc\MvcEvent;
 use Zend\ServiceManager\ServiceManager;
-use Zend\Stdlib\ArrayUtils;
 
 /**
  * ServerAbstractFactory test case.
  */
-class ServerAbstractFactoryTest extends \PHPUnit_Framework_TestCase
+class ServerAbstractFactoryTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var ServerAbstractFactory

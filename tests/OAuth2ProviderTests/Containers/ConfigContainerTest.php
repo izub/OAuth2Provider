@@ -6,7 +6,7 @@ use OAuth2Provider\Containers\ConfigContainer;
 /**
  * ConfigContainer test case.
  */
-class ConfigContainerTest extends \PHPUnit_Framework_TestCase
+class ConfigContainerTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var ConfigContainer

@@ -6,7 +6,7 @@ use OAuth2Provider\Options\ClientAssertionType\HttpBasicConfigurations;
 /**
  * HttpBasicConfigurations test case.
  */
-class HttpBasicConfigurationsTest extends \PHPUnit_Framework_TestCase
+class HttpBasicConfigurationsTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var HttpBasicConfigurations

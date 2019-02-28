@@ -6,7 +6,7 @@ use OAuth2Provider\Options\TypeAbstract;
 /**
  * TypeAbstract test case.
  */
-class TypeAbstractTest extends \PHPUnit_Framework_TestCase
+class TypeAbstractTest extends \PHPUnit\Framework\TestCase
 {
 
     /**

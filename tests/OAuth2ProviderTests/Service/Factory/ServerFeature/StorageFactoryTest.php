@@ -1,16 +1,14 @@
 <?php
 namespace OAuth2ProviderTests;
 
-use OAuth2Provider\Containers\GrantTypeContainer;
 use OAuth2Provider\Containers\StorageContainer;
-use OAuth2Provider\Service\Factory\ServerFeature\GrantTypeFactory;
 use OAuth2Provider\Service\Factory\ServerFeature\StorageFactory;
 use Zend\ServiceManager\ServiceManager;
 
 /**
  * GrantTypeFactory test case.
  */
-class StorageFactoryTest extends \PHPUnit_Framework_TestCase
+class StorageFactoryTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var StorageFactory

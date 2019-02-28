@@ -3,14 +3,13 @@ namespace OAuth2ProviderTests;
 
 use OAuth2Provider\Containers\StorageContainer;
 use OAuth2Provider\Options\GrantType\ClientCredentialsConfigurations;
-use OAuth2Provider\Options\GrantType\RefreshTokenConfigurations;
 use OAuth2Provider\Service\Factory\GrantTypeStrategy\ClientCredentialsFactory;
 use Zend\ServiceManager\ServiceManager;
 
 /**
  * ClientCredentialsFactory test case.
  */
-class ClientCredentialsFactoryTest extends \PHPUnit_Framework_TestCase
+class ClientCredentialsFactoryTest extends \PHPUnit\Framework\TestCase
 {
     /**
      *

@@ -8,7 +8,7 @@ use Zend\ServiceManager\ServiceManager;
 /**
  * GrantTypeFactory test case.
  */
-class GrantTypeFactoryTest extends \PHPUnit_Framework_TestCase
+class GrantTypeFactoryTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var GrantTypeFactory

@@ -8,7 +8,7 @@ use Zend\ServiceManager\ServiceManager;
 /**
  * ResponseTypeFactory test case.
  */
-class ResponseTypeFactoryTest extends \PHPUnit_Framework_TestCase
+class ResponseTypeFactoryTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var ResponseTypeFactory

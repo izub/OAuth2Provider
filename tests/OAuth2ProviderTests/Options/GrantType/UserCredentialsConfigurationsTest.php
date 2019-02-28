@@ -6,7 +6,7 @@ use OAuth2Provider\Options\GrantType\UserCredentialsConfigurations;
 /**
  * UserCredentialsConfigurations test case.
  */
-class UserCredentialsConfigurationsTest extends \PHPUnit_Framework_TestCase
+class UserCredentialsConfigurationsTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var UserCredentialsConfigurations

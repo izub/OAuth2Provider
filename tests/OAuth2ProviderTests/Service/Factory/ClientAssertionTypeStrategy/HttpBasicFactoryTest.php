@@ -1,7 +1,6 @@
 <?php
 namespace OAuth2ProviderTests;
 
-use OAuth2\ClientAssertionType\HttpBasic;
 use OAuth2Provider\Containers\StorageContainer;
 use OAuth2Provider\Options\ClientAssertionType\HttpBasicConfigurations;
 use OAuth2Provider\Service\Factory\ClientAssertionTypeStrategy\HttpBasicFactory;
@@ -10,7 +9,7 @@ use Zend\ServiceManager\ServiceManager;
 /**
  * HttpBasicFactory test case.
  */
-class HttpBasicFactoryTest extends \PHPUnit_Framework_TestCase
+class HttpBasicFactoryTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var HttpBasicFactory

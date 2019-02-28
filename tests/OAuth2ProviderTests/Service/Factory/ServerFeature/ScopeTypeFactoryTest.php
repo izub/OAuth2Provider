@@ -12,7 +12,7 @@ use Zend\ServiceManager\ServiceManager;
 /**
  * ScopeTypeFactory test case.
  */
-class ScopeTypeFactoryTest extends \PHPUnit_Framework_TestCase
+class ScopeTypeFactoryTest extends \PHPUnit\Framework\TestCase
 {
 
     /**

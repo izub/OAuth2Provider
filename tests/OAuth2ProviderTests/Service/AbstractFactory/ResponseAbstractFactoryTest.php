@@ -9,7 +9,7 @@ use Zend\ServiceManager\ServiceManager;
 /**
  * ResponseAbstractFactory test case.
  */
-class ResponseAbstractFactoryTest extends \PHPUnit_Framework_TestCase
+class ResponseAbstractFactoryTest extends \PHPUnit\Framework\TestCase
 {
 
     /**

@@ -9,7 +9,7 @@ use Zend\ServiceManager\ServiceManager;
 /**
  * AccessTokenFactory test case.
  */
-class AccessTokenFactoryTest extends \PHPUnit_Framework_TestCase
+class AccessTokenFactoryTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var AccessTokenFactory

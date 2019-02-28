@@ -3,14 +3,13 @@ namespace OAuth2ProviderTests;
 
 use OAuth2Provider\Containers\GrantTypeContainer;
 use OAuth2Provider\Options\Configuration;
-use OAuth2Provider\Server;
 use OAuth2Provider\Service\AbstractFactory\ContainerAbstractFactory;
 use Zend\ServiceManager\ServiceManager;
 
 /**
  * ContainerAbstractFactory test case.
  */
-class ContainerAbstractFactoryTest extends \PHPUnit_Framework_TestCase
+class ContainerAbstractFactoryTest extends \PHPUnit\Framework\TestCase
 {
     /**
      *

@@ -6,7 +6,7 @@ use OAuth2Provider\Options\ScopeType\ScopeConfigurations;
 /**
  * ScopeConfigurations test case.
  */
-class ScopeConfigurationsTest extends \PHPUnit_Framework_TestCase
+class ScopeConfigurationsTest extends \PHPUnit\Framework\TestCase
 {
 
     /**

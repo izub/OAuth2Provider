@@ -6,7 +6,7 @@ use OAuth2Provider\Containers\RequestContainer;
 /**
  * RequestContainer test case.
  */
-class RequestContainerTest extends \PHPUnit_Framework_TestCase
+class RequestContainerTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var RequestContainer

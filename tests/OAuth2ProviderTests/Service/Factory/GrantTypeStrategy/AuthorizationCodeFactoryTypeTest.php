@@ -3,14 +3,13 @@ namespace OAuth2ProviderTests;
 
 use OAuth2Provider\Containers\StorageContainer;
 use OAuth2Provider\Options\GrantType\AuthorizationCodeConfigurations;
-use OAuth2Provider\Options\GrantType\RefreshTokenConfigurations;
 use OAuth2Provider\Service\Factory\GrantTypeStrategy\AuthorizationCodeFactory;
 use Zend\ServiceManager\ServiceManager;
 
 /**
  * AuthorizationCodeFactory test case.
  */
-class AuthorizationCodeFactoryTypeTest extends \PHPUnit_Framework_TestCase
+class AuthorizationCodeFactoryTypeTest extends \PHPUnit\Framework\TestCase
 {
 
     /**

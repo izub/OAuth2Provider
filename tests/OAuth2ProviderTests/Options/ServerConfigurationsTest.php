@@ -6,7 +6,7 @@ use OAuth2Provider\Options\ServerConfigurations;
 /**
  * ServerConfigurations test case.
  */
-class ServerConfigurationsTest extends \PHPUnit_Framework_TestCase
+class ServerConfigurationsTest extends \PHPUnit\Framework\TestCase
 {
 
     /**

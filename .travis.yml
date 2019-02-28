@@ -18,6 +18,7 @@ before_install:
   - rm composer.json
   - rm composer.lock
   - cp ../OAuth2Provider/.travis/travis.composer.json ./composer.json
+  - if [ -n "$GH_TOKEN" ]; then composer config github-oauth.github.com ${GH_TOKEN}; fi;
   - composer install --prefer-source
   - cd vendor/franz-deleon/fdl-oauth2-provider/tests
 

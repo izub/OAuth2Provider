@@ -36,9 +36,9 @@ class StorageFactoryTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * Tests GrantTypeFactory->createService()
+     * Tests GrantTypeFactory->__invoke()
      */
-    public function testCreateService()
+    public function test__invoke()
     {
         $storages = array(
             'user_credentials' => new \stdClass(),
@@ -47,12 +47,14 @@ class StorageFactoryTest extends \PHPUnit\Framework\TestCase
         $mainSm = new ServiceManager();
         $mainSm->setService('OAuth2Provider/Containers/StorageContainer', new StorageContainer());
 
-        $storageFactory = $this->storageFactory->createService($mainSm);
+        $storageFactory = $this->storageFactory->__invoke($mainSm, '');
         $r = $storageFactory($storages, 'server_key');
+
+        $this->assertIsArray($r);
     }
 
     /**
-     * Tests GrantTypeFactory->createService()
+     * Tests GrantTypeFactory->__invoke()
      * @expectedException \OAuth2Provider\Exception\InvalidConfigException
      */
     public function testCreateServiceReturnsException()
@@ -64,7 +66,7 @@ class StorageFactoryTest extends \PHPUnit\Framework\TestCase
         $mainSm = new ServiceManager();
         $mainSm->setService('OAuth2Provider/Containers/StorageContainer', new StorageContainer());
 
-        $storageFactory = $this->storageFactory->createService($mainSm);
+        $storageFactory = $this->storageFactory->__invoke($mainSm, '');
         $r = $storageFactory($storages, 'server_key');
     }
 }

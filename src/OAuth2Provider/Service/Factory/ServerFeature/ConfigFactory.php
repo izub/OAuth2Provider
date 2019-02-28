@@ -1,9 +1,10 @@
 <?php
 namespace OAuth2Provider\Service\Factory\ServerFeature;
 
-use Zend\ServiceManager;
+use Interop\Container\ContainerInterface;
+use Zend\ServiceManager\Factory\FactoryInterface;
 
-class ConfigFactory implements ServiceManager\FactoryInterface
+class ConfigFactory implements FactoryInterface
 {
     /**
      * For reference only
@@ -21,15 +22,17 @@ class ConfigFactory implements ServiceManager\FactoryInterface
     );
 
     /**
-     * Store config information
+     * Create an object
      *
-     * @param ServiceLocatorInterface $serviceLocator
-     * @return mixed
+     * @param  ContainerInterface $container
+     * @param  string $requestedName
+     * @param  null|array $options
+     * @return callable
      */
-    public function createService(ServiceManager\ServiceLocatorInterface $serviceLocator)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        return function ($configs, $serverKey) use ($serviceLocator) {
-            $configContainer = $serviceLocator->get('OAuth2Provider/Containers/ConfigContainer');
+        return function ($configs, $serverKey) use ($container) {
+            $configContainer = $container->get('OAuth2Provider/Containers/ConfigContainer');
             $configContainer[$serverKey] = $configs;
 
             return $configContainer->getServerContents($serverKey);

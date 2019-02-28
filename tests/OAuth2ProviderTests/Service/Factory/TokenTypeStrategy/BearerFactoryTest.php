@@ -34,9 +34,9 @@ class BearerFactoryTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * Tests BearerFactory->createService()
+     * Tests BearerFactory->__invoke()
      */
-    public function testCreateService()
+    public function test__invoke()
     {
         $mainSm = new ServiceManager();
         $mainSm->setService('OAuth2Provider/Options/TokenType/Bearer', new BearerConfigurations());
@@ -47,13 +47,13 @@ class BearerFactoryTest extends \PHPUnit\Framework\TestCase
             ),
         );
 
-        $r = $this->BearerFactory->createService($mainSm);
+        $r = $this->BearerFactory->__invoke($mainSm, '');
         $r = $r('OAuth2\TokenType\Bearer', $config, 'server2');
         $this->assertInstanceOf('OAuth2\TokenType\TokenTypeInterface', $r);
     }
 
     /**
-     * Tests BearerFactory->createService()
+     * Tests BearerFactory->__invoke()
      * @expectedException \OAuth2Provider\Exception\InvalidServerException
      */
     public function testCreateServiceReturnsException()
@@ -67,7 +67,7 @@ class BearerFactoryTest extends \PHPUnit\Framework\TestCase
             ),
         );
 
-        $r = $this->BearerFactory->createService($mainSm);
+        $r = $this->BearerFactory->__invoke($mainSm, '');
         $r('OAuth2\TokenType\Bearer', $config, 'server2');
     }
 }

@@ -32,9 +32,9 @@ class ConfigFactoryTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * Tests ConfigFactory->createService()
+     * Tests ConfigFactory->__invoke()
      */
-    public function testCreateService()
+    public function test__invoke()
     {
         $mainSm = new ServiceManager();
 
@@ -44,7 +44,7 @@ class ConfigFactoryTest extends \PHPUnit\Framework\TestCase
         $configContainer = $mainSm->get('OAuth2Provider/Containers/ConfigContainer');
         $configContainer['server1'] = $expected = array('key1' => 'val1');
 
-        $config = $this->ConfigFactory->createService($mainSm);
+        $config = $this->ConfigFactory->__invoke($mainSm, '');
         $r = $config($expected, 'server1');
 
         $this->assertSame($expected, $r);

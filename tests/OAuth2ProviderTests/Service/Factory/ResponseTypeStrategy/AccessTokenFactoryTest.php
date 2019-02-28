@@ -37,9 +37,9 @@ class AccessTokenFactoryTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * Tests AccessTokenFactory->createService()
+     * Tests AccessTokenFactory->__invoke()
      */
-    public function testCreateService()
+    public function test__invoke()
     {
         $mainSm = new ServiceManager();
 
@@ -52,13 +52,13 @@ class AccessTokenFactoryTest extends \PHPUnit\Framework\TestCase
 
         $classname = 'OAuth2\ResponseType\AccessToken';
         $options = array('token_storage' => '', 'refresh_storage' => '');
-        $r = $this->AccessTokenFactory->createService($mainSm);
+        $r = $this->AccessTokenFactory->__invoke($mainSm, '');
         $r = $r($classname, $options, 'server1');
         $this->assertInstanceOf('OAuth2\ResponseType\AccessTokenInterface', $r);
     }
 
     /**
-     * Tests AccessTokenFactory->createService()
+     * Tests AccessTokenFactory->__invoke()
      */
     public function testCreateServiceDoesNotHaveOptionalRefreshTokenStorage()
     {
@@ -73,13 +73,13 @@ class AccessTokenFactoryTest extends \PHPUnit\Framework\TestCase
 
         $classname = 'OAuth2\ResponseType\AccessToken';
         $options = array('token_storage' => '', 'refresh_storage' => '');
-        $r = $this->AccessTokenFactory->createService($mainSm);
+        $r = $this->AccessTokenFactory->__invoke($mainSm, '');
         $r = $r($classname, $options, 'server1');
         $this->assertInstanceOf('OAuth2\ResponseType\AccessTokenInterface', $r);
     }
 
     /**
-     * Tests AccessTokenFactory->createService()
+     * Tests AccessTokenFactory->__invoke()
      * @expectedException \OAuth2Provider\Exception\InvalidServerException
      */
     public function testCreateServiceReturnsException()
@@ -94,7 +94,7 @@ class AccessTokenFactoryTest extends \PHPUnit\Framework\TestCase
 
         $classname = 'OAuth2\ResponseType\AccessToken';
         $options = array('token_storage' => '', 'refresh_storage' => '');
-        $r = $this->AccessTokenFactory->createService($mainSm);
+        $r = $this->AccessTokenFactory->__invoke($mainSm, '');
         $r($classname, $options, 'server1');
     }
 

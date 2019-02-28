@@ -36,10 +36,10 @@ class ScopeFactoryTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * Tests ScopeFactory->createService()
+     * Tests ScopeFactory->__invoke()
      * @group test1
      */
-    public function testCreateService()
+    public function test__invoke()
     {
         $serverKey = uniqid();
         $sm = new ServiceManager();
@@ -49,7 +49,7 @@ class ScopeFactoryTest extends \PHPUnit\Framework\TestCase
         $storage = $sm->get('OAuth2Provider/Containers/StorageContainer');
         $storage[$serverKey]['scope'] = new \OAuth2ProviderTests\Assets\Storage\ScopeStorage();
 
-        $f = $this->ScopeFactory->createService($sm);
+        $f = $this->ScopeFactory->__invoke($sm, '');
 
         $options = array(
             'use_defined_scope_storage' => true,
@@ -65,7 +65,7 @@ class ScopeFactoryTest extends \PHPUnit\Framework\TestCase
         $sm = new ServiceManager();
         $sm->setService('OAuth2Provider/Options/ScopeType/Scope', new ScopeConfigurations());
         $sm->setService('OAuth2Provider/Containers/StorageContainer', new StorageContainer());
-        $f = $this->ScopeFactory->createService($sm);
+        $f = $this->ScopeFactory->__invoke($sm, '');
 
         $options = array(
             'use_defined_scope_storage' => true,
@@ -83,7 +83,7 @@ class ScopeFactoryTest extends \PHPUnit\Framework\TestCase
         $sm->setService('OAuth2Provider/Options/ScopeType/Scope', new ScopeConfigurations());
         $sm->setService('OAuth2Provider/Containers/StorageContainer', new StorageContainer());
 
-        $f = $this->ScopeFactory->createService($sm);
+        $f = $this->ScopeFactory->__invoke($sm, '');
 
         $options = array(
             'default_scope' => 'basic',
@@ -109,7 +109,7 @@ class ScopeFactoryTest extends \PHPUnit\Framework\TestCase
         $sm->setService('OAuth2Provider/Options/ScopeType/Scope', new ScopeConfigurations());
         $sm->setService('OAuth2Provider/Containers/StorageContainer', $storage);
 
-        $f = $this->ScopeFactory->createService($sm);
+        $f = $this->ScopeFactory->__invoke($sm, '');
 
         $options = array(
             'use_defined_scope_storage' => true,

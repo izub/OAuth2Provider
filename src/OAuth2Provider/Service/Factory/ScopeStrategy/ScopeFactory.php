@@ -1,14 +1,13 @@
 <?php
 namespace OAuth2Provider\Service\Factory\ScopeStrategy;
 
+use Interop\Container\ContainerInterface;
+use OAuth2\Storage\ScopeInterface;
 use OAuth2Provider\Exception;
 use OAuth2Provider\Lib\Utilities;
+use Zend\ServiceManager\Factory\FactoryInterface;
 
-use OAuth2\Storage\ScopeInterface;
-
-use Zend\ServiceManager;
-
-class ScopeFactory implements ServiceManager\FactoryInterface
+class ScopeFactory implements FactoryInterface
 {
     /**
      * Identifiers
@@ -18,18 +17,20 @@ class ScopeFactory implements ServiceManager\FactoryInterface
     const IDENTIFIER = 'scope';
 
     /**
-     * Initialize an OAuth Scope
+     * Create an object
      *
-     * @param ServiceLocatorInterface $serviceLocator
-     * @return mixed
-    */
-    public function createService(ServiceManager\ServiceLocatorInterface $serviceLocator)
+     * @param  ContainerInterface $container
+     * @param  string $requestedName
+     * @param  null|array $options
+     * @return callable
+     */
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        return function ($scopeClassName, $options, $serverKey) use ($serviceLocator) {
-            $options = $serviceLocator->get('OAuth2Provider/Options/ScopeType/Scope')->setFromArray($options);
+        return function ($scopeClassName, $options, $serverKey) use ($container) {
+            $options = $container->get('OAuth2Provider/Options/ScopeType/Scope')->setFromArray($options);
 
             $storage = null;
-            $storageContainer = $serviceLocator->get('OAuth2Provider/Containers/StorageContainer');
+            $storageContainer = $container->get('OAuth2Provider/Containers/StorageContainer');
 
             if (true === $options->getUseDefinedScopeStorage()
                 && $storageContainer->isExistingServerContentInKey($serverKey, ScopeFactory::IDENTIFIER)
@@ -41,7 +42,7 @@ class ScopeFactory implements ServiceManager\FactoryInterface
                     $serverKey,
                     $options->getStorage(),
                     $storageContainer,
-                    $serviceLocator
+                    $container
                 );
 
                 // attempt to assemble it manually

@@ -1,12 +1,12 @@
 <?php
 namespace OAuth2Provider\Service\Factory\ResponseTypeStrategy;
 
+use Interop\Container\ContainerInterface;
 use OAuth2Provider\Exception;
 use OAuth2Provider\Lib\Utilities;
+use Zend\ServiceManager\Factory\FactoryInterface;
 
-use Zend\ServiceManager;
-
-class AccessTokenFactory implements ServiceManager\FactoryInterface
+class AccessTokenFactory implements FactoryInterface
 {
     /**
      * Main identifier
@@ -22,17 +22,19 @@ class AccessTokenFactory implements ServiceManager\FactoryInterface
     const REFRESH_TOKEN_IDENTIFIER = 'refresh_token';
 
     /**
-     * Initialize an OAuth Access Token Response type
+     * Create an object
      *
-     * @param ServiceLocatorInterface $serviceLocator
-     * @return mixed
+     * @param  ContainerInterface $container
+     * @param  string $requestedName
+     * @param  null|array $options
+     * @return callable
      */
-    public function createService(ServiceManager\ServiceLocatorInterface $serviceLocator)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        return function ($accessTokenClassName, $options, $serverKey) use ($serviceLocator) {
+        return function ($accessTokenClassName, $options, $serverKey) use ($container) {
 
-            $storageContainer = $serviceLocator->get('OAuth2Provider/Containers/StorageContainer');
-            $options = $serviceLocator->get('OAuth2Provider/Options/ResponseType/AccessToken')->setFromArray($options);
+            $storageContainer = $container->get('OAuth2Provider/Containers/StorageContainer');
+            $options = $container->get('OAuth2Provider/Options/ResponseType/AccessToken')->setFromArray($options);
 
             $tokenStorageName        = $options->getTokenStorage() ?: $options->getStorage();
             $refreshTokenStorageName = $options->getRefreshStorage();
@@ -42,7 +44,7 @@ class AccessTokenFactory implements ServiceManager\FactoryInterface
                 $serverKey,
                 $tokenStorageName,
                 $storageContainer,
-                $serviceLocator,
+                $container,
                 AccessTokenFactory::ACCESS_TOKEN_IDENTIFIER
             );
 
@@ -51,7 +53,7 @@ class AccessTokenFactory implements ServiceManager\FactoryInterface
                 $serverKey,
                 $refreshTokenStorageName,
                 $storageContainer,
-                $serviceLocator,
+                $container,
                 AccessTokenFactory::REFRESH_TOKEN_IDENTIFIER
             );
 

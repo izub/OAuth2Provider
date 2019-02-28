@@ -1,14 +1,13 @@
 <?php
 namespace OAuth2Provider\Service\AbstractFactory;
 
+use Interop\Container\ContainerInterface;
+use OAuth2\Server as OAuth2Server;
 use OAuth2Provider\Exception;
 use OAuth2Provider\ServerInterface;
+use Zend\ServiceManager\Factory\AbstractFactoryInterface;
 
-use OAuth2\Server as OAuth2Server;
-
-use Zend\ServiceManager;
-
-class ServerAbstractFactory implements ServiceManager\AbstractFactoryInterface
+class ServerAbstractFactory implements AbstractFactoryInterface
 {
     /**
      * @var string
@@ -26,14 +25,13 @@ class ServerAbstractFactory implements ServiceManager\AbstractFactoryInterface
     protected $serverKey;
 
     /**
-     * Determine if we can create a service with name
+     * Can the factory create an instance for the service?
      *
-     * @param ServiceLocatorInterface $serviceLocator
-     * @param $name
-     * @param $requestedName
+     * @param  ContainerInterface $container
+     * @param  string $requestedName
      * @return bool
      */
-    public function canCreateServiceWithName(ServiceManager\ServiceLocatorInterface $serviceLocator, $name, $requestedName)
+    public function canCreate(ContainerInterface $container, $requestedName)
     {
         // for performance, do a prelim check before checking against regex
         if (0 !== strpos($requestedName, 'oauth2provider.server.')) {
@@ -45,13 +43,13 @@ class ServerAbstractFactory implements ServiceManager\AbstractFactoryInterface
         ) {
             $serverKey = $serverKeyMatch[1];
 
-            $configs       = $serviceLocator->get('OAuth2Provider/Options/Configuration');
+            $configs       = $container->get('OAuth2Provider/Options/Configuration');
             $serverConfigs = $configs->getServers();
             if (isset($serverConfigs[$serverKey])) {
                 $this->serverKey = $serverKey;
 
                 // checks for a version. If no version exists use the first server found
-                $mvcEvent = $serviceLocator->get('Application')->getMvcEvent();
+                $mvcEvent = $container->get('Application')->getMvcEvent();
                 if (isset($mvcEvent) && null !== $mvcEvent->getRouteMatch()) {
                     $version = $mvcEvent->getRouteMatch()->getParam('version');
                 }
@@ -88,27 +86,27 @@ class ServerAbstractFactory implements ServiceManager\AbstractFactoryInterface
     }
 
     /**
-     * Create service with name
+     * Create an object
      *
-     * @param ServiceLocatorInterface $serviceLocator
-     * @param $name
-     * @param $requestedName
-     * @return mixed
+     * @param  ContainerInterface $container
+     * @param  string $requestedName
+     * @param  null|array $options
+     * @return object
      */
-    public function createServiceWithName(ServiceManager\ServiceLocatorInterface $serviceLocator, $name, $requestedName)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $options = $serviceLocator->get('OAuth2Provider/Options/Server')->setFromArray($this->serverConfig);
+        $options = $container->get('OAuth2Provider/Options/Server')->setFromArray($this->serverConfig);
 
         $server = $options->getServerClass();
         $server = new $server();
 
-        $storage      = $serviceLocator->get('OAuth2Provider/Service/ServerFeature/StorageFactory');
-        $config       = $serviceLocator->get('OAuth2Provider/Service/ServerFeature/ConfigFactory');
-        $grantType    = $serviceLocator->get('OAuth2Provider/Service/ServerFeature/GrantTypeFactory');
-        $responseType = $serviceLocator->get('OAuth2Provider/Service/ServerFeature/ResponseTypeFactory');
-        $tokenType    = $serviceLocator->get('OAuth2Provider/Service/ServerFeature/TokenTypeFactory');
-        $scopeType    = $serviceLocator->get('OAuth2Provider/Service/ServerFeature/ScopeTypeFactory');
-        $clientAssertionType = $serviceLocator->get('OAuth2Provider/Service/ServerFeature/ClientAssertionTypeFactory');
+        $storage      = $container->get('OAuth2Provider/Service/ServerFeature/StorageFactory');
+        $config       = $container->get('OAuth2Provider/Service/ServerFeature/ConfigFactory');
+        $grantType    = $container->get('OAuth2Provider/Service/ServerFeature/GrantTypeFactory');
+        $responseType = $container->get('OAuth2Provider/Service/ServerFeature/ResponseTypeFactory');
+        $tokenType    = $container->get('OAuth2Provider/Service/ServerFeature/TokenTypeFactory');
+        $scopeType    = $container->get('OAuth2Provider/Service/ServerFeature/ScopeTypeFactory');
+        $clientAssertionType = $container->get('OAuth2Provider/Service/ServerFeature/ClientAssertionTypeFactory');
 
         $ouath2server = new OAuth2Server(
             $storage($options->getStorages(), $this->serverKey),
@@ -122,6 +120,8 @@ class ServerAbstractFactory implements ServiceManager\AbstractFactoryInterface
 
         if ($server instanceof ServerInterface) {
             $server->setOAuth2Server($ouath2server);
+            $server->setRequest($container->get('oauth2provider.server.main.request'));
+            $server->setResponse($container->get('oauth2provider.server.main.response'));
             return $server;
         }
 

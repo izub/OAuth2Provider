@@ -1,33 +1,35 @@
 <?php
 namespace OAuth2Provider\Service\Factory\GrantTypeStrategy;
 
+use Interop\Container\ContainerInterface;
 use OAuth2Provider\Exception;
 use OAuth2Provider\Lib\Utilities;
+use Zend\ServiceManager\Factory\FactoryInterface;
 
-use Zend\ServiceManager;
-
-class AuthorizationCodeFactory implements ServiceManager\FactoryInterface
+class AuthorizationCodeFactory implements FactoryInterface
 {
     const IDENTIFIER = 'authorization_code';
 
     /**
-     * Initialize an OAuth storage object
+     * Create an object
      *
-     * @param ServiceLocatorInterface $serviceLocator
-     * @return mixed
+     * @param  ContainerInterface $container
+     * @param  string $requestedName
+     * @param  null|array $options
+     * @return callable
      */
-    public function createService(ServiceManager\ServiceLocatorInterface $serviceLocator)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        return function ($authorizationCodeClassName, $options, $serverKey) use ($serviceLocator) {
+        return function ($authorizationCodeClassName, $options, $serverKey) use ($container) {
 
-            $options = $serviceLocator->get('OAuth2Provider/Options/GrantType/AuthorizationCode')
+            $options = $container->get('OAuth2Provider/Options/GrantType/AuthorizationCode')
                 ->setFromArray($options);
 
             $storage = Utilities::storageLookup(
                 $serverKey,
                 $options->getAuthorizationCodeStorage() ?: $options->getStorage(),
-                $serviceLocator->get('OAuth2Provider/Containers/StorageContainer'),
-                $serviceLocator,
+                $container->get('OAuth2Provider/Containers/StorageContainer'),
+                $container,
                 AuthorizationCodeFactory::IDENTIFIER
             );
 

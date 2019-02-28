@@ -1,11 +1,11 @@
 <?php
 namespace OAuth2Provider\Service\Factory\TokenTypeStrategy;
 
+use Interop\Container\ContainerInterface;
 use OAuth2Provider\Exception;
+use Zend\ServiceManager\Factory\FactoryInterface;
 
-use Zend\ServiceManager;
-
-class BearerFactory implements ServiceManager\FactoryInterface
+class BearerFactory implements FactoryInterface
 {
     /**
      * Identifiers
@@ -24,16 +24,18 @@ class BearerFactory implements ServiceManager\FactoryInterface
     );
 
     /**
-     * Initialize an OAuth Authorization Code Response type
+     * Create an object
      *
-     * @param ServiceLocatorInterface $serviceLocator
-     * @return mixed
+     * @param  ContainerInterface $container
+     * @param  string $requestedName
+     * @param  null|array $options
+     * @return callable
      */
-    public function createService(ServiceManager\ServiceLocatorInterface $serviceLocator)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         $acceptedKeys = $this->acceptedKeys;
-        return function ($bearerClassName, $options, $serverKey) use ($serviceLocator, $acceptedKeys) {
-            $options = $serviceLocator->get('OAuth2Provider/Options/TokenType/Bearer')->setFromArray($options);
+        return function ($bearerClassName, $options, $serverKey) use ($container, $acceptedKeys) {
+            $options = $container->get('OAuth2Provider/Options/TokenType/Bearer')->setFromArray($options);
             $configs = $options->getConfigs();
 
             foreach (array_keys($configs) as $key) {

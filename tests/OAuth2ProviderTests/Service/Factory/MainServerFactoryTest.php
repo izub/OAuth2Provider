@@ -36,9 +36,9 @@ class MainServerFactoryTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * Tests MainServerFactory->createService()
+     * Tests MainServerFactory->__invoke()
      */
-    public function testCreateService()
+    public function test__invoke()
     {
         $oauthconfig = array(
             'servers' => array(
@@ -57,7 +57,7 @@ class MainServerFactoryTest extends \PHPUnit\Framework\TestCase
         $mainSm->setService('OAuth2Provider/Options/Configuration', new Configuration($oauthconfig));
         $mainSm->setService('oauth2provider.server.default', new Server());
 
-        $r = $this->MainServerFactory->createService($mainSm);
+        $r = $this->MainServerFactory->__invoke($mainSm, '');
         $this->assertInstanceOf('OAuth2Provider\Server', $r);
     }
 }

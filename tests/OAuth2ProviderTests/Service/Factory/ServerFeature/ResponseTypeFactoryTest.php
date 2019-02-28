@@ -35,9 +35,9 @@ class ResponseTypeFactoryTest extends \PHPUnit\Framework\TestCase
 
 
     /**
-     * Tests ResponseTypeFactory->createService()
+     * Tests ResponseTypeFactory->__invoke()
      */
-    public function testCreateService()
+    public function test__invoke()
     {
         $storage = new \OAuth2\ResponseType\AccessToken(new \OAuth2ProviderTests\Assets\Storage\AccessTokenStorage);
         $strategies = array(
@@ -46,7 +46,7 @@ class ResponseTypeFactoryTest extends \PHPUnit\Framework\TestCase
 
         $mainSm = new ServiceManager();
         $mainSm->setService('OAuth2Provider/Containers/ResponseTypeContainer', new ResponseTypeContainer());
-        $r = $this->ResponseTypeFactory->createService($mainSm);
+        $r = $this->ResponseTypeFactory->__invoke($mainSm, '');
         $this->assertSame(array('token' => $storage), $r($strategies, 'server1'));
     }
 }

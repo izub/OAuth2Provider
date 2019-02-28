@@ -37,29 +37,29 @@ class ContainerAbstractFactoryTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * Tests ContainerAbstractFactory->canCreateServiceWithName()
+     * Tests ContainerAbstractFactory->canCreate()
      */
     public function testCanCreateServiceWithNameReturnsFalseOnNonMatches()
     {
         $sm = new ServiceManager();
-        $r = $this->ContainerAbstractFactory->canCreateServiceWithName($sm, '', 'non-ouath');
+        $r = $this->ContainerAbstractFactory->canCreate($sm, 'non-ouath');
 
         $this->assertFalse($r);
     }
 
     /**
-     * Tests ContainerAbstractFactory->canCreateServiceWithName()
+     * Tests ContainerAbstractFactory->canCreate()
      */
     public function testCanCreateServiceWithNameReturnsFalseOnInvalidReges()
     {
         $sm = new ServiceManager();
-        $r = $this->ContainerAbstractFactory->canCreateServiceWithName($sm, '', 'oauth2provider.server.---');
+        $r = $this->ContainerAbstractFactory->canCreate($sm, 'oauth2provider.server.---');
 
         $this->assertFalse($r);
     }
 
     /**
-     * Tests ContainerAbstractFactory->canCreateServiceWithName()
+     * Tests ContainerAbstractFactory->canCreate()
      * @group test2
      */
     public function testCanCreateServiceWithKeyAsMainAndHasNoSMInstance()
@@ -74,13 +74,13 @@ class ContainerAbstractFactoryTest extends \PHPUnit\Framework\TestCase
 
         $sm->setService('oauth2provider.server.default', new \stdClass());
 
-        $r = $this->ContainerAbstractFactory->canCreateServiceWithName($sm, '', 'oauth2provider.server.main.grant_type');
+        $r = $this->ContainerAbstractFactory->canCreate($sm, 'oauth2provider.server.main.grant_type');
 
         $this->assertTrue($r);
     }
 
     /**
-     * Tests ContainerAbstractFactory->canCreateServiceWithName()
+     * Tests ContainerAbstractFactory->canCreate()
      * @group test3
      */
     public function testCanCreateServiceWithContainerKeyAndHasNoSMInstance()
@@ -94,15 +94,15 @@ class ContainerAbstractFactoryTest extends \PHPUnit\Framework\TestCase
         $container = $sm->get('OAuth2Provider/Containers/GrantTypeContainer');
         $container[$serverKey]['user_credentials'] = new \stdClass();
 
-        $r = $this->ContainerAbstractFactory->canCreateServiceWithName(
-            $sm, '', "oauth2provider.server.{$serverKey}.grant_type.user_credentials"
+        $r = $this->ContainerAbstractFactory->canCreate(
+            $sm, "oauth2provider.server.{$serverKey}.grant_type.user_credentials"
         );
 
         $this->assertTrue($r);
     }
 
     /**
-     * Tests ContainerAbstractFactory->canCreateServiceWithName()
+     * Tests ContainerAbstractFactory->canCreate()
      * @group test4
      */
     public function testCanCreateServiceWithContainerKeyAndHasSMInstance()
@@ -120,15 +120,15 @@ class ContainerAbstractFactoryTest extends \PHPUnit\Framework\TestCase
         $container = $sm->get('OAuth2Provider/Containers/GrantTypeContainer');
         $container[$serverKey]['user_credentials'] = new \OAuth2ProviderTests\Assets\GrantTypeCustomUserCredentials();
 
-        $r = $this->ContainerAbstractFactory->canCreateServiceWithName(
-            $sm, '', "oauth2provider.server.{$serverKey}.grant_type.user_credentials"
+        $r = $this->ContainerAbstractFactory->canCreate(
+            $sm, "oauth2provider.server.{$serverKey}.grant_type.user_credentials"
         );
 
         $this->assertTrue($r);
     }
 
     /**
-     * Tests ContainerAbstractFactory->canCreateServiceWithName()
+     * Tests ContainerAbstractFactory->canCreate()
      * @group test5
      */
     public function testCanCreateServiceWithContainerKeyHasNoSMInstanceAndInvalidContainerKey()
@@ -142,15 +142,15 @@ class ContainerAbstractFactoryTest extends \PHPUnit\Framework\TestCase
         $container = $sm->get('OAuth2Provider/Containers/GrantTypeContainer');
         $container[$serverKey]['user_credentials'] = new \stdClass();
 
-        $r = $this->ContainerAbstractFactory->canCreateServiceWithName(
-            $sm, '', "oauth2provider.server.{$serverKey}.grant_type.zzz"
+        $r = $this->ContainerAbstractFactory->canCreate(
+            $sm, "oauth2provider.server.{$serverKey}.grant_type.zzz"
         );
 
         $this->assertFalse($r);
     }
 
     /**
-     * Tests ContainerAbstractFactory->canCreateServiceWithName()
+     * Tests ContainerAbstractFactory->canCreate()
      * @group test6
      */
     public function testCanCreateServiceWithInvalidContainerKey()
@@ -160,8 +160,8 @@ class ContainerAbstractFactoryTest extends \PHPUnit\Framework\TestCase
 
         $sm->setService("oauth2provider.server.{$serverKey}", new \stdClass());
 
-        $r = $this->ContainerAbstractFactory->canCreateServiceWithName(
-            $sm, '', "oauth2provider.server.{$serverKey}.invalidcontainer"
+        $r = $this->ContainerAbstractFactory->canCreate(
+            $sm, "oauth2provider.server.{$serverKey}.invalidcontainer"
         );
 
         $this->assertFalse($r);
@@ -182,12 +182,12 @@ class ContainerAbstractFactoryTest extends \PHPUnit\Framework\TestCase
         $container = $sm->get('OAuth2Provider/Containers/GrantTypeContainer');
         $container[$serverKey]['user_credentials'] = new \stdClass();
 
-        $this->ContainerAbstractFactory->canCreateServiceWithName(
-            $sm, '', "oauth2provider.server.{$serverKey}.grant_type.user_credentials"
+        $this->ContainerAbstractFactory->canCreate(
+            $sm, "oauth2provider.server.{$serverKey}.grant_type.user_credentials"
         );
 
 
-        $r = $this->ContainerAbstractFactory->createServiceWithName($sm, '', '');
+        $r = $this->ContainerAbstractFactory->__invoke($sm, '');
         $this->assertInstanceOf('stdClass', $r);
     }
 }

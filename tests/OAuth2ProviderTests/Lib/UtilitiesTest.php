@@ -220,7 +220,7 @@ class UtilitiesTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * Tests TokenTypeFactory->createService()
+     * Tests TokenTypeFactory->__invoke()
      * @group test4
      */
     public function testSingleStrategyOptionExtractorWithConfigAsArrayWithNameAndOptions()
@@ -274,7 +274,7 @@ class UtilitiesTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * Tests TokenTypeFactory->createService()
+     * Tests TokenTypeFactory->__invoke()
      * @group test7
      */
     public function testSingleStrategyOptionExtractorWithConfigAsArrayInsideArrayWithMultipleInputs()
@@ -310,7 +310,7 @@ class UtilitiesTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * Tests TokenTypeFactory->createService()
+     * Tests TokenTypeFactory->__invoke()
      * @group test8
      */
     public function testSingleStrategyOptionWithConfigIsEmpty()

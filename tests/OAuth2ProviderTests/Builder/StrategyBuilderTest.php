@@ -46,7 +46,7 @@ class StrategyBuilderTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * Tests GrantTypeFactory->createService()
+     * Tests GrantTypeFactory->__invoke()
      * @group test1b
      */
     public function testInitStrategyFeatureIsPHPObject()
@@ -71,7 +71,7 @@ class StrategyBuilderTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * Tests GrantTypeFactory->createService()
+     * Tests GrantTypeFactory->__invoke()
      * @group test2
      */
     public function testInitStrategyFeatureIsPHPObjectWithUserCredentialAsParent()
@@ -96,7 +96,7 @@ class StrategyBuilderTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * Tests GrantTypeFactory->createService()
+     * Tests GrantTypeFactory->__invoke()
      * @group test2b
      */
     public function testInitStrategyFeatureIsPHPObjectWithCustomUserCredentials()
@@ -106,8 +106,8 @@ class StrategyBuilderTest extends \PHPUnit\Framework\TestCase
             $storage,
         );
 
-        $filterManager = new FilterPluginManager();
         $mainSm = new ServiceManager();
+        $filterManager = new FilterPluginManager($mainSm);
         $mainSm->setService('FilterManager', $filterManager);
         $filterManager->setService('wordcamelcasetounderscore', new CamelCaseToUnderscore());
 
@@ -124,7 +124,7 @@ class StrategyBuilderTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * Tests GrantTypeFactory->createService()
+     * Tests GrantTypeFactory->__invoke()
      * @group test3
      */
     public function testInitStrategyFeatureIsAServiceManagerElement()
@@ -150,7 +150,7 @@ class StrategyBuilderTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * Tests GrantTypeFactory->createService()
+     * Tests GrantTypeFactory->__invoke()
      * @group test4
      */
     public function testInitStrategyFeatureIsAServiceManagerElementUsingConfigAsArrayAndDirectNameAsSMElement()
@@ -179,7 +179,7 @@ class StrategyBuilderTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * Tests GrantTypeFactory->createService()
+     * Tests GrantTypeFactory->__invoke()
      * @group test5
      */
     public function testInitStrategyFeatureWithStorageAsDirectKey()
@@ -192,7 +192,7 @@ class StrategyBuilderTest extends \PHPUnit\Framework\TestCase
         $mainSm->setService('OAuth2Provider/Options/ServerFeatureType', new ServerFeatureTypeConfiguration());
         $mainSm->setService('OAuth2Provider/Options/GrantType/UserCredentials', new UserCredentialsConfigurations());
         $mainSm->setService('OAuth2Provider/Containers/StorageContainer', $storageContainer);
-        $mainSm->setService('OAuth2Provider/GrantTypeStrategy/UserCredentials', (new UserCredentialsFactory())->createService($mainSm));
+        $mainSm->setService('OAuth2Provider/GrantTypeStrategy/UserCredentials', (new UserCredentialsFactory())->__invoke($mainSm, ''));
 
         $config = array(
             array(
@@ -216,7 +216,7 @@ class StrategyBuilderTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * Tests GrantTypeFactory->createService()
+     * Tests GrantTypeFactory->__invoke()
      * @group test6
      */
     public function testInitStrategyFeatureWithStorageAsGrantTypeKey()
@@ -229,7 +229,7 @@ class StrategyBuilderTest extends \PHPUnit\Framework\TestCase
         $mainSm->setService('OAuth2Provider/Options/ServerFeatureType', new ServerFeatureTypeConfiguration());
         $mainSm->setService('OAuth2Provider/Options/GrantType/UserCredentials', new UserCredentialsConfigurations());
         $mainSm->setService('OAuth2Provider/Containers/StorageContainer', $storageContainer);
-        $mainSm->setService('OAuth2Provider/GrantTypeStrategy/UserCredentials', (new UserCredentialsFactory())->createService($mainSm));
+        $mainSm->setService('OAuth2Provider/GrantTypeStrategy/UserCredentials', (new UserCredentialsFactory())->__invoke($mainSm, ''));
 
         $config = array(
             'user_credentials' => array(
@@ -250,7 +250,7 @@ class StrategyBuilderTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * Tests GrantTypeFactory->createService()
+     * Tests GrantTypeFactory->__invoke()
      * @group test5b
      */
     public function testInitStrategyFeatureWithFeatureNameAsAvailableStrategyKey()
@@ -263,7 +263,7 @@ class StrategyBuilderTest extends \PHPUnit\Framework\TestCase
         $mainSm->setService('OAuth2Provider/Options/ServerFeatureType', new ServerFeatureTypeConfiguration());
         $mainSm->setService('OAuth2Provider/Options/GrantType/UserCredentials', new UserCredentialsConfigurations());
         $mainSm->setService('OAuth2Provider/Containers/StorageContainer', $storageContainer);
-        $mainSm->setService('OAuth2Provider/GrantTypeStrategy/UserCredentials', (new UserCredentialsFactory())->createService($mainSm));
+        $mainSm->setService('OAuth2Provider/GrantTypeStrategy/UserCredentials', (new UserCredentialsFactory())->__invoke($mainSm, ''));
 
         $config = array(
             'user_credentials',
@@ -282,7 +282,7 @@ class StrategyBuilderTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * Tests GrantTypeFactory->createService()
+     * Tests GrantTypeFactory->__invoke()
      * @group test6b
      */
     public function testInitStrategyFeatureWithParentAsConcreteGrantTypeAndNotInsideArray()
@@ -295,7 +295,7 @@ class StrategyBuilderTest extends \PHPUnit\Framework\TestCase
         $mainSm->setService('OAuth2Provider/Options/ServerFeatureType', new ServerFeatureTypeConfiguration());
         $mainSm->setService('OAuth2Provider/Options/GrantType/UserCredentials', new UserCredentialsConfigurations());
         $mainSm->setService('OAuth2Provider/Containers/StorageContainer', $storageContainer);
-        $mainSm->setService('OAuth2Provider/GrantTypeStrategy/UserCredentials', (new UserCredentialsFactory())->createService($mainSm));
+        $mainSm->setService('OAuth2Provider/GrantTypeStrategy/UserCredentials', (new UserCredentialsFactory())->__invoke($mainSm, ''));
 
         $config = array(
             'OAuth2ProviderTests\Assets\GrantTypeWithParentUserCredentials',
@@ -314,7 +314,7 @@ class StrategyBuilderTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * Tests GrantTypeFactory->createService()
+     * Tests GrantTypeFactory->__invoke()
      * @group test7
      */
     public function testInitStrategyFeatureWithParentAsConcreteGrantType()
@@ -327,7 +327,7 @@ class StrategyBuilderTest extends \PHPUnit\Framework\TestCase
         $mainSm->setService('OAuth2Provider/Options/ServerFeatureType', new ServerFeatureTypeConfiguration());
         $mainSm->setService('OAuth2Provider/Options/GrantType/UserCredentials', new UserCredentialsConfigurations());
         $mainSm->setService('OAuth2Provider/Containers/StorageContainer', $storageContainer);
-        $mainSm->setService('OAuth2Provider/GrantTypeStrategy/UserCredentials', (new UserCredentialsFactory())->createService($mainSm));
+        $mainSm->setService('OAuth2Provider/GrantTypeStrategy/UserCredentials', (new UserCredentialsFactory())->__invoke($mainSm, ''));
 
         $config = array(
             array(
@@ -351,7 +351,7 @@ class StrategyBuilderTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * Tests GrantTypeFactory->createService()
+     * Tests GrantTypeFactory->__invoke()
      * @group test7a
      */
     public function testInitStrategyFeatureWithParentAsConcreteGrantTypeAndDirectArrayUse()
@@ -364,7 +364,7 @@ class StrategyBuilderTest extends \PHPUnit\Framework\TestCase
         $mainSm->setService('OAuth2Provider/Options/ServerFeatureType', new ServerFeatureTypeConfiguration());
         $mainSm->setService('OAuth2Provider/Options/GrantType/UserCredentials', new UserCredentialsConfigurations());
         $mainSm->setService('OAuth2Provider/Containers/StorageContainer', $storageContainer);
-        $mainSm->setService('OAuth2Provider/GrantTypeStrategy/UserCredentials', (new UserCredentialsFactory())->createService($mainSm));
+        $mainSm->setService('OAuth2Provider/GrantTypeStrategy/UserCredentials', (new UserCredentialsFactory())->__invoke($mainSm, ''));
 
         $config = array(
             array(
@@ -385,7 +385,7 @@ class StrategyBuilderTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * Tests GrantTypeFactory->createService()
+     * Tests GrantTypeFactory->__invoke()
      * @group test7aa
      */
     public function testInitStrategyFeatureWithParentAsConcreteGrantTypeAndKeyasExtendedConcrete()
@@ -398,7 +398,7 @@ class StrategyBuilderTest extends \PHPUnit\Framework\TestCase
         $mainSm->setService('OAuth2Provider/Options/ServerFeatureType', new ServerFeatureTypeConfiguration());
         $mainSm->setService('OAuth2Provider/Options/GrantType/UserCredentials', new UserCredentialsConfigurations());
         $mainSm->setService('OAuth2Provider/Containers/StorageContainer', $storageContainer);
-        $mainSm->setService('OAuth2Provider/GrantTypeStrategy/UserCredentials', (new UserCredentialsFactory())->createService($mainSm));
+        $mainSm->setService('OAuth2Provider/GrantTypeStrategy/UserCredentials', (new UserCredentialsFactory())->__invoke($mainSm, ''));
 
         $config = array(
             'user_credentials' => 'OAuth2ProviderTests\Assets\GrantTypeWithParentUserCredentials',
@@ -417,7 +417,7 @@ class StrategyBuilderTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * Tests GrantTypeFactory->createService()
+     * Tests GrantTypeFactory->__invoke()
      * @group test7ab
      */
     public function testInitStrategyFeatureWithNameAsAliasedKeyAndDirectArrayUse()
@@ -430,7 +430,7 @@ class StrategyBuilderTest extends \PHPUnit\Framework\TestCase
         $mainSm->setService('OAuth2Provider/Options/ServerFeatureType', new ServerFeatureTypeConfiguration());
         $mainSm->setService('OAuth2Provider/Options/GrantType/UserCredentials', new UserCredentialsConfigurations());
         $mainSm->setService('OAuth2Provider/Containers/StorageContainer', $storageContainer);
-        $mainSm->setService('OAuth2Provider/GrantTypeStrategy/UserCredentials', (new UserCredentialsFactory())->createService($mainSm));
+        $mainSm->setService('OAuth2Provider/GrantTypeStrategy/UserCredentials', (new UserCredentialsFactory())->__invoke($mainSm, ''));
 
         $config = array(
             array(
@@ -452,81 +452,7 @@ class StrategyBuilderTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * Tests GrantTypeFactory->createService()
-     * @group test7ba
-     */
-    public function testInitStrategyFeatureWithParentAsSMAware()
-    {
-        // seed the storagecontainer
-        $storageContainer = new StorageContainer();
-        $storageContainer['server1']['user_credentials'] = new \OAuth2ProviderTests\Assets\StorageUserCredentials();
-
-        $mainSm = new ServiceManager();
-        $mainSm->setService('OAuth2Provider/Options/ServerFeatureType', new ServerFeatureTypeConfiguration());
-        $mainSm->setService('OAuth2Provider/Options/GrantType/UserCredentials', new UserCredentialsConfigurations());
-        $mainSm->setService('OAuth2Provider/Containers/StorageContainer', $storageContainer);
-        $mainSm->setService('OAuth2Provider/GrantTypeStrategy/UserCredentials', (new UserCredentialsFactory())->createService($mainSm));
-
-        $config = array(
-            array(
-                'name' => 'OAuth2ProviderTests\Assets\CustomUserCredentialsSMAware',
-                'options' => array(
-                    'storage' => 'user_credentials'
-                )
-            )
-        );
-
-        $subjects  = $config;
-        $serverKey = 'server1';
-        $container = new GrantTypeContainer();
-        $strategies = array('user_credentials' => 'OAuth2Provider/GrantTypeStrategy/UserCredentials');
-        $concreteClasses = array('user_credentials'   => 'OAuth2\GrantType\UserCredentials');
-        $interface = 'OAuth2\GrantType\GrantTypeInterface';
-        $builder = new StrategyBuilder($subjects, $serverKey, $strategies, $concreteClasses, $container, $interface);
-
-        $r = $builder->initStrategyFeature($mainSm);
-        $this->assertInstanceOf('OAuth2\GrantType\UserCredentials', $r['user_credentials']);
-    }
-
-    /**
-     * Tests GrantTypeFactory->createService()
-     * @group test7bb
-     */
-    public function testInitStrategyFeatureWithParentAsSLAware()
-    {
-        // seed the storagecontainer
-        $storageContainer = new StorageContainer();
-        $storageContainer['server1']['user_credentials'] = new \OAuth2ProviderTests\Assets\StorageUserCredentials();
-
-        $mainSm = new ServiceManager();
-        $mainSm->setService('OAuth2Provider/Options/ServerFeatureType', new ServerFeatureTypeConfiguration());
-        $mainSm->setService('OAuth2Provider/Options/GrantType/UserCredentials', new UserCredentialsConfigurations());
-        $mainSm->setService('OAuth2Provider/Containers/StorageContainer', $storageContainer);
-        $mainSm->setService('OAuth2Provider/GrantTypeStrategy/UserCredentials', (new UserCredentialsFactory())->createService($mainSm));
-
-        $config = array(
-            array(
-                'name' => 'OAuth2ProviderTests\Assets\CustomUserCredentialsSLAware',
-                'options' => array(
-                    'storage' => 'user_credentials'
-                )
-            )
-        );
-
-        $subjects  = $config;
-        $serverKey = 'server1';
-        $container = new GrantTypeContainer();
-        $strategies = array('user_credentials' => 'OAuth2Provider/GrantTypeStrategy/UserCredentials');
-        $concreteClasses = array('user_credentials'   => 'OAuth2\GrantType\UserCredentials');
-        $interface = 'OAuth2\GrantType\GrantTypeInterface';
-        $builder = new StrategyBuilder($subjects, $serverKey, $strategies, $concreteClasses, $container, $interface);
-
-        $r = $builder->initStrategyFeature($mainSm);
-        $this->assertInstanceOf('OAuth2\GrantType\UserCredentials', $r['user_credentials']);
-    }
-
-    /**
-     * Tests GrantTypeFactory->createService()
+     * Tests GrantTypeFactory->__invoke()
      * @group test7b
      */
     public function testInitStrategyFeatureWithParentAsKeyAndOptions()
@@ -539,7 +465,7 @@ class StrategyBuilderTest extends \PHPUnit\Framework\TestCase
         $mainSm->setService('OAuth2Provider/Options/ServerFeatureType', new ServerFeatureTypeConfiguration());
         $mainSm->setService('OAuth2Provider/Options/GrantType/UserCredentials', new UserCredentialsConfigurations());
         $mainSm->setService('OAuth2Provider/Containers/StorageContainer', $storageContainer);
-        $mainSm->setService('OAuth2Provider/GrantTypeStrategy/UserCredentials', (new UserCredentialsFactory())->createService($mainSm));
+        $mainSm->setService('OAuth2Provider/GrantTypeStrategy/UserCredentials', (new UserCredentialsFactory())->__invoke($mainSm, ''));
 
         $config = array(
             'user_credentials' => array(
@@ -560,7 +486,7 @@ class StrategyBuilderTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * Tests GrantTypeFactory->createService()
+     * Tests GrantTypeFactory->__invoke()
      * @group test7ba
      */
     public function testInitStrategyFeatureWithParentAsKeyAndNameAndOptions()
@@ -573,7 +499,7 @@ class StrategyBuilderTest extends \PHPUnit\Framework\TestCase
         $mainSm->setService('OAuth2Provider/Options/ServerFeatureType', new ServerFeatureTypeConfiguration());
         $mainSm->setService('OAuth2Provider/Options/GrantType/UserCredentials', new UserCredentialsConfigurations());
         $mainSm->setService('OAuth2Provider/Containers/StorageContainer', $storageContainer);
-        $mainSm->setService('OAuth2Provider/GrantTypeStrategy/UserCredentials', (new UserCredentialsFactory())->createService($mainSm));
+        $mainSm->setService('OAuth2Provider/GrantTypeStrategy/UserCredentials', (new UserCredentialsFactory())->__invoke($mainSm, ''));
 
         $config = array(
             'user_credentials' => array(
@@ -595,7 +521,7 @@ class StrategyBuilderTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * Tests GrantTypeFactory->createService()
+     * Tests GrantTypeFactory->__invoke()
      * @group test7c
      */
     public function testInitStrategyFeatureWithEmptyConfigString()
@@ -622,7 +548,7 @@ class StrategyBuilderTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * Tests GrantTypeFactory->createService()
+     * Tests GrantTypeFactory->__invoke()
      * @group test7d
      */
     public function testInitStrategyFeatureWithEmptyConfigArray()
@@ -649,7 +575,7 @@ class StrategyBuilderTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * Tests GrantTypeFactory->createService()
+     * Tests GrantTypeFactory->__invoke()
      * @expectedException \OAuth2Provider\Exception\InvalidServerException
      * @group test8
      */
@@ -679,7 +605,7 @@ class StrategyBuilderTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * Tests GrantTypeFactory->createService()
+     * Tests GrantTypeFactory->__invoke()
      * @expectedException \OAuth2Provider\Exception\InvalidClassException
      * @group test9
      */
@@ -710,7 +636,7 @@ class StrategyBuilderTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * Tests GrantTypeFactory->createService()
+     * Tests GrantTypeFactory->__invoke()
      * @expectedException \OAuth2Provider\Exception\InvalidClassException
      * @group test10
      */

@@ -35,9 +35,9 @@ class UserCredentialsFactoryTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-	 * Tests UserCredentialsFactory->createService()
+	 * Tests UserCredentialsFactory->__invoke()
 	 */
-    public function testCreateService()
+    public function test__invoke()
     {
         $mainSm = new ServiceManager();
 
@@ -49,7 +49,7 @@ class UserCredentialsFactoryTest extends \PHPUnit\Framework\TestCase
 
         $classname = 'OAuth2ProviderTests\Assets\GrantTypeCustomUserCredentials';
         $options = array('storage' => 'user_credentials');
-        $r = $this->UserCredentialsFactory->createService($mainSm);
+        $r = $this->UserCredentialsFactory->__invoke($mainSm, '');
         $r = $r($classname, $options, 'server1');
         $this->assertInstanceOf('OAuth2\GrantType\GrantTypeInterface', $r);
     }
@@ -69,7 +69,7 @@ class UserCredentialsFactoryTest extends \PHPUnit\Framework\TestCase
 
         $classname = 'OAuth2ProviderTests\Assets\GrantTypeCustomUserCredentials';
         $options = array('storage' => 'user_credentials');
-        $r = $this->UserCredentialsFactory->createService($mainSm);
+        $r = $this->UserCredentialsFactory->__invoke($mainSm, '');
         $r($classname, $options, 'server1');
     }
 }

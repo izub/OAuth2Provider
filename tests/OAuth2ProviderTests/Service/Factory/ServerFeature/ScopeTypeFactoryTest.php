@@ -41,9 +41,9 @@ class ScopeTypeFactoryTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * Tests ScopeTypeFactory->createService()
+     * Tests ScopeTypeFactory->__invoke()
      */
-    public function testCreateService()
+    public function test__invoke()
     {
         $serverKey = uniqid();
         $sm = new ServiceManager();
@@ -54,21 +54,21 @@ class ScopeTypeFactoryTest extends \PHPUnit\Framework\TestCase
         $sm->setService('OAuth2Provider/Containers/ScopeTypeContainer', new ScopeTypeContainer());
         $sm->setService('OAuth2Provider/Containers/StorageContainer', $storage);
         $sm->setService('OAuth2Provider/Options/ScopeType/Scope', new ScopeConfigurations());
-        $sm->setService('OAuth2Provider/ScopeStrategy/Scope', (new ScopeFactory())->createService($sm));
+        $sm->setService('OAuth2Provider/ScopeStrategy/Scope', (new ScopeFactory())->__invoke($sm, ''));
         $sm->setService('OAuth2Provider/Options/ServerFeatureType', new ServerFeatureTypeConfiguration());
 
         $options = array(
             'name' => 'scope'
         );
 
-        $f = $this->ScopeTypeFactory->createService($sm);
+        $f = $this->ScopeTypeFactory->__invoke($sm, '');
         $r = $f($options, $serverKey);
 
         $this->assertInstanceOf('OAuth2\Scope', $r);
     }
 
     /**
-     * Tests ScopeTypeFactory->createService()
+     * Tests ScopeTypeFactory->__invoke()
      */
     public function testCreateServiceWhereOptionInsideArray()
     {
@@ -81,7 +81,7 @@ class ScopeTypeFactoryTest extends \PHPUnit\Framework\TestCase
         $sm->setService('OAuth2Provider/Containers/ScopeTypeContainer', new ScopeTypeContainer());
         $sm->setService('OAuth2Provider/Containers/StorageContainer', $storage);
         $sm->setService('OAuth2Provider/Options/ScopeType/Scope', new ScopeConfigurations());
-        $sm->setService('OAuth2Provider/ScopeStrategy/Scope', (new ScopeFactory())->createService($sm));
+        $sm->setService('OAuth2Provider/ScopeStrategy/Scope', (new ScopeFactory())->__invoke($sm, ''));
         $sm->setService('OAuth2Provider/Options/ServerFeatureType', new ServerFeatureTypeConfiguration());
 
         $options = array(
@@ -90,14 +90,14 @@ class ScopeTypeFactoryTest extends \PHPUnit\Framework\TestCase
             ),
         );
 
-        $f = $this->ScopeTypeFactory->createService($sm);
+        $f = $this->ScopeTypeFactory->__invoke($sm, '');
         $r = $f($options, $serverKey);
 
         $this->assertInstanceOf('OAuth2\Scope', $r);
     }
 
     /**
-     * Tests ScopeTypeFactory->createService()
+     * Tests ScopeTypeFactory->__invoke()
      */
     public function testCreateServiceUsingManualScope()
     {
@@ -107,7 +107,7 @@ class ScopeTypeFactoryTest extends \PHPUnit\Framework\TestCase
         $sm->setService('OAuth2Provider/Containers/ScopeTypeContainer', new ScopeTypeContainer());
         $sm->setService('OAuth2Provider/Containers/StorageContainer', new StorageContainer());
         $sm->setService('OAuth2Provider/Options/ScopeType/Scope', new ScopeConfigurations());
-        $sm->setService('OAuth2Provider/ScopeStrategy/Scope', (new ScopeFactory())->createService($sm));
+        $sm->setService('OAuth2Provider/ScopeStrategy/Scope', (new ScopeFactory())->__invoke($sm, ''));
         $sm->setService('OAuth2Provider/Options/ServerFeatureType', new ServerFeatureTypeConfiguration());
 
         $options = array(
@@ -120,14 +120,14 @@ class ScopeTypeFactoryTest extends \PHPUnit\Framework\TestCase
             )
         );
 
-        $f = $this->ScopeTypeFactory->createService($sm);
+        $f = $this->ScopeTypeFactory->__invoke($sm, '');
         $r = $f($options, $serverKey);
 
         $this->assertInstanceOf('OAuth2\Scope', $r);
     }
 
     /**
-     * Tests ScopeTypeFactory->createService()
+     * Tests ScopeTypeFactory->__invoke()
      */
     public function testCreateServiceReturnsNull()
     {
@@ -136,7 +136,7 @@ class ScopeTypeFactoryTest extends \PHPUnit\Framework\TestCase
 
         $options = array();
 
-        $f = $this->ScopeTypeFactory->createService($sm);
+        $f = $this->ScopeTypeFactory->__invoke($sm, '');
         $r = $f($options, $serverKey);
 
         $this->assertNull($r);

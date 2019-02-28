@@ -1,22 +1,25 @@
 <?php
 namespace OAuth2Provider\Service\Factory;
 
+use Interop\Container\ContainerInterface;
 use OAuth2Provider\Controller\ControllerInterface;
 use OAuth2Provider\Exception;
 use OAuth2Provider\ServerAwareInterface;
-use Zend\ServiceManager;
+use Zend\ServiceManager\Factory\FactoryInterface;
 
-class ControllerFactory implements ServiceManager\FactoryInterface
+class ControllerFactory implements FactoryInterface
 {
     /**
-     * Create service
+     * Create an object
      *
-     * @param ServiceLocatorInterface $serviceLocator
+     * @param  ContainerInterface $container
+     * @param  string $requestedName
+     * @param  null|array $options
      * @return mixed
      */
-    public function createService(ServiceManager\ServiceLocatorInterface $serviceLocator)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $configuration = $serviceLocator->getServiceLocator()->get('OAuth2Provider/Options/Configuration');
+        $configuration = $container->get('OAuth2Provider/Options/Configuration');
 
         // check for a specific defined server controller
         $servers   = $configuration->getServers();
@@ -24,7 +27,7 @@ class ControllerFactory implements ServiceManager\FactoryInterface
         if (isset($servers[$serverKey]['controller'])) {
             $controller = $servers[$serverKey]['controller'];
         } else {
-            $mvcEvent = $serviceLocator->getServiceLocator()->get('Application')->getMvcEvent();
+            $mvcEvent = $container->get('Application')->getMvcEvent();
             if (isset($mvcEvent) && null !== $mvcEvent->getRouteMatch()) {
                 $version = $mvcEvent->getRouteMatch()->getParam('version');
             }
@@ -52,14 +55,14 @@ class ControllerFactory implements ServiceManager\FactoryInterface
         $controller = new $controller();
 
         if ($controller instanceof ServerAwareInterface) {
-            $server = $serviceLocator->getServiceLocator()->get('oauth2provider.server.main');
+            $server = $container->get('oauth2provider.server.main');
             $controller->setServer($server);
         }
 
         // check for valid controller
         if (!$controller instanceof ControllerInterface) {
             throw new Exception\InvalidConfigException(sprintf(
-                "Class '%s': controller '%s' is not an intance of ControllerInterface",
+                "Class '%s': controller '%s' is not an instance of ControllerInterface",
                 __CLASS__ . ":" . __METHOD__,
                 get_class($controller)
             ));

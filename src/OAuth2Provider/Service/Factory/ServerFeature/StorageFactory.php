@@ -1,12 +1,13 @@
 <?php
 namespace OAuth2Provider\Service\Factory\ServerFeature;
 
+use Interop\Container\ContainerInterface;
+use OAuth2Provider\Containers\StorageContainer;
 use OAuth2Provider\Exception;
 use OAuth2Provider\Lib\Utilities;
+use Zend\ServiceManager\Factory\FactoryInterface;
 
-use Zend\ServiceManager;
-
-class StorageFactory implements ServiceManager\FactoryInterface
+class StorageFactory implements FactoryInterface
 {
     /**
      * Valid storage name keys
@@ -24,17 +25,20 @@ class StorageFactory implements ServiceManager\FactoryInterface
     );
 
     /**
-     * Initialize an OAuth storage object
+     * Create an object
      *
-     * @param ServiceLocatorInterface $serviceLocator
-     * @return mixed
+     * @param  ContainerInterface $container
+     * @param  string $requestedName
+     * @param  null|array $options
+     * @return callable
      */
-    public function createService(ServiceManager\ServiceLocatorInterface $serviceLocator)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         $storageNames = $this->storageNames;
-        return function ($storages, $serverKey) use ($serviceLocator, $storageNames) {
+        return function ($storages, $serverKey) use ($container, $storageNames) {
 
-            $storageContainer = $serviceLocator->get('OAuth2Provider/Containers/StorageContainer');
+            /** @var StorageContainer $storageContainer */
+            $storageContainer = $container->get('OAuth2Provider/Containers/StorageContainer');
             foreach ($storages as $storageName => $storage) {
                 if (!in_array($storageName, $storageNames)) {
                     throw new Exception\InvalidConfigException(sprintf(
@@ -44,7 +48,7 @@ class StorageFactory implements ServiceManager\FactoryInterface
                     ));
                 }
 
-                $storageObj = Utilities::createClass($storage, $serviceLocator, sprintf(
+                $storageObj = Utilities::createClass($storage, $container, sprintf(
                     "Class '%s' does not exist.",
                     is_object($storage) ? get_class($storage) : $storage
                 ));

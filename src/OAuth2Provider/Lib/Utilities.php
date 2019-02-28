@@ -1,9 +1,9 @@
 <?php
 namespace OAuth2Provider\Lib;
 
-use OAuth2Provider\Exception;
+use Interop\Container\ContainerInterface as InteropContainerInterface;
 use OAuth2Provider\Containers\ContainerInterface;
-
+use OAuth2Provider\Exception;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 class Utilities
@@ -70,7 +70,7 @@ class Utilities
      * @param string                  $serverIndex     Server index
      * @param mixed                   $contentIndex    Content index
      * @param ContainerInterface      $container       Container to check against
-     * @param ServiceLocatorInterface $serviceLocator  Service manager
+     * @param InteropContainerInterface $serviceLocator  Service manager
      * @param string                  $identifier      Strategy identifier
      * @param string                  $defaultReturn   Default value to return. Defaults to null
      * @return object|null
@@ -79,7 +79,7 @@ class Utilities
         $serverIndex,
         $contentIndex,
         ContainerInterface $container,
-        ServiceLocatorInterface $serviceLocator,
+        InteropContainerInterface $serviceLocator,
         $identifier = '',
         $defaultReturn = null
     ) {
@@ -129,24 +129,5 @@ class Utilities
         }
 
         return $strategy;
-    }
-
-    /**
-     * This a quick hack for the sm to check if sm key has been initialized yet
-     *
-     * @param ServiceLocatorInterface $sm
-     * @param string $name
-     * @return boolean
-     */
-    public static function hasSMInstance(ServiceLocatorInterface $sm, $name)
-    {
-        $replacements = array('-' => '', '_' => '', ' ' => '', '\\' => '', '/' => '');
-
-        $instances = $sm->getRegisteredServices();
-        $instances = $instances['instances'];
-
-        $name = strtolower(strtr($name, $replacements));
-
-        return in_array($name, $instances);
     }
 }

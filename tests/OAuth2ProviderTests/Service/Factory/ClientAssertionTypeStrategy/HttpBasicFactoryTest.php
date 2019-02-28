@@ -35,9 +35,9 @@ class HttpBasicFactoryTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * Tests HttpBasicFactory->createService()
+     * Tests HttpBasicFactory->__invoke()
      */
-    public function testCreateService()
+    public function test__invoke()
     {
         $sm = new ServiceManager();
 
@@ -52,7 +52,7 @@ class HttpBasicFactoryTest extends \PHPUnit\Framework\TestCase
             )
         );
 
-        $s = $this->HttpBasicFactory->createService($sm);
+        $s = $this->HttpBasicFactory->__invoke($sm, '');
         $r = $s('OAuth2\ClientAssertionType\HttpBasic', $options, $serverKey);
 
         $this->assertInstanceOf('OAuth2\ClientAssertionType\ClientAssertionTypeInterface', $r);
@@ -76,7 +76,7 @@ class HttpBasicFactoryTest extends \PHPUnit\Framework\TestCase
             )
         );
 
-        $s = $this->HttpBasicFactory->createService($sm);
+        $s = $this->HttpBasicFactory->__invoke($sm, '');
         $r = $s('OAuth2\ClientAssertionType\HttpBasic', $options, $serverKey);
     }
 }

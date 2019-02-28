@@ -37,9 +37,9 @@ class ClientCredentialsFactoryTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * Tests ClientCredentialsFactory->createService()
+     * Tests ClientCredentialsFactory->__invoke()
      */
-    public function testCreateService()
+    public function test__invoke()
     {
         $mainSm = new ServiceManager();
         $storageCont = new StorageContainer();
@@ -51,13 +51,13 @@ class ClientCredentialsFactoryTest extends \PHPUnit\Framework\TestCase
         $mainSm->setService('OAuth2Provider/Options/GrantType/ClientCredentials', new ClientCredentialsConfigurations());
 
 
-        $r = $this->ClientCredentialsFactory->createService($mainSm);
+        $r = $this->ClientCredentialsFactory->__invoke($mainSm, '');
         $r = $r('OAuth2\GrantType\ClientCredentials', $options, 'server3');
         $this->assertInstanceOf('OAuth2\GrantType\ClientCredentials', $r);
     }
 
     /**
-     * Tests ClientCredentialsFactory->createService()
+     * Tests ClientCredentialsFactory->__invoke()
      * @expectedException \OAuth2Provider\Exception\InvalidServerException
      */
     public function testCreateServiceReturnsException()
@@ -71,7 +71,7 @@ class ClientCredentialsFactoryTest extends \PHPUnit\Framework\TestCase
         $mainSm->setService('OAuth2Provider/Options/GrantType/ClientCredentials', new ClientCredentialsConfigurations());
 
 
-        $r = $this->ClientCredentialsFactory->createService($mainSm);
+        $r = $this->ClientCredentialsFactory->__invoke($mainSm, '');
         $r('OAuth2\GrantType\ClientCredentials', $options, 'server3');
     }
 }

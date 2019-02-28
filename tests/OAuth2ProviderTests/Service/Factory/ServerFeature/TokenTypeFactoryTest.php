@@ -37,7 +37,7 @@ class TokenTypeFactoryTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * Tests TokenTypeFactory->createService()
+     * Tests TokenTypeFactory->__invoke()
      * @group test1
      */
     public function testCreateServiceWithConfigAsDirectName()
@@ -45,17 +45,17 @@ class TokenTypeFactoryTest extends \PHPUnit\Framework\TestCase
         $mainSm = new ServiceManager();
         $mainSm->setService('OAuth2Provider/Containers/TokenTypeContainer', new TokenTypeContainer());
         $mainSm->setService('OAuth2Provider/Options/TokenType/Bearer', new BearerConfigurations());
-        $mainSm->setService('OAuth2Provider/TokenTypeStrategy/Bearer', (new BearerFactory())->createService($mainSm));
+        $mainSm->setService('OAuth2Provider/TokenTypeStrategy/Bearer', (new BearerFactory())->__invoke($mainSm, ''));
         $mainSm->setService('OAuth2Provider/Options/ServerFeatureType', new ServerFeatureTypeConfiguration());
         $config = 'bearer';
 
-        $ser = $this->TokenTypeFactory->createService($mainSm);
+        $ser = $this->TokenTypeFactory->__invoke($mainSm, '');
         $r = $ser($config, 'server3');
         $this->assertInstanceOf('OAuth2\TokenType\TokenTypeInterface', $r);
     }
 
     /**
-     * Tests TokenTypeFactory->createService()
+     * Tests TokenTypeFactory->__invoke()
      * @group test2
      */
     public function testCreateServiceWithConfigAsDirectInsideArray()
@@ -63,17 +63,17 @@ class TokenTypeFactoryTest extends \PHPUnit\Framework\TestCase
         $mainSm = new ServiceManager();
         $mainSm->setService('OAuth2Provider/Containers/TokenTypeContainer', new TokenTypeContainer());
         $mainSm->setService('OAuth2Provider/Options/TokenType/Bearer', new BearerConfigurations());
-        $mainSm->setService('OAuth2Provider/TokenTypeStrategy/Bearer', (new BearerFactory())->createService($mainSm));
+        $mainSm->setService('OAuth2Provider/TokenTypeStrategy/Bearer', (new BearerFactory())->__invoke($mainSm, ''));
         $mainSm->setService('OAuth2Provider/Options/ServerFeatureType', new ServerFeatureTypeConfiguration());
         $config = array('bearer');
 
-        $ser = $this->TokenTypeFactory->createService($mainSm);
+        $ser = $this->TokenTypeFactory->__invoke($mainSm, '');
         $r = $ser($config, 'server3');
         $this->assertInstanceOf('OAuth2\TokenType\TokenTypeInterface', $r);
     }
 
     /**
-     * Tests TokenTypeFactory->createService()
+     * Tests TokenTypeFactory->__invoke()
      * @group test3
      */
     public function testCreateServiceWithConfigAsDirectWithNameInsideArray()
@@ -81,19 +81,19 @@ class TokenTypeFactoryTest extends \PHPUnit\Framework\TestCase
         $mainSm = new ServiceManager();
         $mainSm->setService('OAuth2Provider/Containers/TokenTypeContainer', new TokenTypeContainer());
         $mainSm->setService('OAuth2Provider/Options/TokenType/Bearer', new BearerConfigurations());
-        $mainSm->setService('OAuth2Provider/TokenTypeStrategy/Bearer', (new BearerFactory())->createService($mainSm));
+        $mainSm->setService('OAuth2Provider/TokenTypeStrategy/Bearer', (new BearerFactory())->__invoke($mainSm, ''));
         $mainSm->setService('OAuth2Provider/Options/ServerFeatureType', new ServerFeatureTypeConfiguration());
         $config = array(
             'name' => 'bearer',
         );
 
-        $ser = $this->TokenTypeFactory->createService($mainSm);
+        $ser = $this->TokenTypeFactory->__invoke($mainSm, '');
         $r = $ser($config, 'server3');
         $this->assertInstanceOf('OAuth2\TokenType\TokenTypeInterface', $r);
     }
 
     /**
-     * Tests TokenTypeFactory->createService()
+     * Tests TokenTypeFactory->__invoke()
      * @group test4
      */
     public function testCreateServiceWithConfigAsArrayWithNameAndOptions()
@@ -101,7 +101,7 @@ class TokenTypeFactoryTest extends \PHPUnit\Framework\TestCase
         $mainSm = new ServiceManager();
         $mainSm->setService('OAuth2Provider/Containers/TokenTypeContainer', new TokenTypeContainer());
         $mainSm->setService('OAuth2Provider/Options/TokenType/Bearer', new BearerConfigurations());
-        $mainSm->setService('OAuth2Provider/TokenTypeStrategy/Bearer', (new BearerFactory())->createService($mainSm));
+        $mainSm->setService('OAuth2Provider/TokenTypeStrategy/Bearer', (new BearerFactory())->__invoke($mainSm, ''));
         $mainSm->setService('OAuth2Provider/Options/ServerFeatureType', new ServerFeatureTypeConfiguration());
         $config = array(
             array(
@@ -114,13 +114,13 @@ class TokenTypeFactoryTest extends \PHPUnit\Framework\TestCase
             ),
         );
 
-        $ser = $this->TokenTypeFactory->createService($mainSm);
+        $ser = $this->TokenTypeFactory->__invoke($mainSm, '');
         $r = $ser($config, 'server3');
         $this->assertInstanceOf('OAuth2\TokenType\TokenTypeInterface', $r);
     }
 
     /**
-     * Tests TokenTypeFactory->createService()
+     * Tests TokenTypeFactory->__invoke()
      * @group test5
      */
     public function testCreateServiceWithConfigAsDirectWithNameAndOptions()
@@ -128,7 +128,7 @@ class TokenTypeFactoryTest extends \PHPUnit\Framework\TestCase
         $mainSm = new ServiceManager();
         $mainSm->setService('OAuth2Provider/Containers/TokenTypeContainer', new TokenTypeContainer());
         $mainSm->setService('OAuth2Provider/Options/TokenType/Bearer', new BearerConfigurations());
-        $mainSm->setService('OAuth2Provider/TokenTypeStrategy/Bearer', (new BearerFactory())->createService($mainSm));
+        $mainSm->setService('OAuth2Provider/TokenTypeStrategy/Bearer', (new BearerFactory())->__invoke($mainSm, ''));
         $mainSm->setService('OAuth2Provider/Options/ServerFeatureType', new ServerFeatureTypeConfiguration());
         $config = array(
             'name' => 'bearer',
@@ -139,13 +139,13 @@ class TokenTypeFactoryTest extends \PHPUnit\Framework\TestCase
             ),
         );
 
-        $ser = $this->TokenTypeFactory->createService($mainSm);
+        $ser = $this->TokenTypeFactory->__invoke($mainSm, '');
         $r = $ser($config, 'server3');
         $this->assertInstanceOf('OAuth2\TokenType\TokenTypeInterface', $r);
     }
 
     /**
-     * Tests TokenTypeFactory->createService()
+     * Tests TokenTypeFactory->__invoke()
      * @group test6
      */
     public function testCreateServiceWithConfigAsWithNameArrayInsideArray()
@@ -153,7 +153,7 @@ class TokenTypeFactoryTest extends \PHPUnit\Framework\TestCase
         $mainSm = new ServiceManager();
         $mainSm->setService('OAuth2Provider/Containers/TokenTypeContainer', new TokenTypeContainer());
         $mainSm->setService('OAuth2Provider/Options/TokenType/Bearer', new BearerConfigurations());
-        $mainSm->setService('OAuth2Provider/TokenTypeStrategy/Bearer', (new BearerFactory())->createService($mainSm));
+        $mainSm->setService('OAuth2Provider/TokenTypeStrategy/Bearer', (new BearerFactory())->__invoke($mainSm, ''));
         $mainSm->setService('OAuth2Provider/Options/ServerFeatureType', new ServerFeatureTypeConfiguration());
         $config = array(
             array(
@@ -161,13 +161,13 @@ class TokenTypeFactoryTest extends \PHPUnit\Framework\TestCase
             ),
         );
 
-        $ser = $this->TokenTypeFactory->createService($mainSm);
+        $ser = $this->TokenTypeFactory->__invoke($mainSm, '');
         $r = $ser($config, 'server3');
         $this->assertInstanceOf('OAuth2\TokenType\TokenTypeInterface', $r);
     }
 
     /**
-     * Tests TokenTypeFactory->createService()
+     * Tests TokenTypeFactory->__invoke()
      * @group test7
      */
     public function testCreateServiceWithConfigAsWithNameArrayInsideArrayWithMultipleInputs()
@@ -175,7 +175,7 @@ class TokenTypeFactoryTest extends \PHPUnit\Framework\TestCase
         $mainSm = new ServiceManager();
         $mainSm->setService('OAuth2Provider/Containers/TokenTypeContainer', new TokenTypeContainer());
         $mainSm->setService('OAuth2Provider/Options/TokenType/Bearer', new BearerConfigurations());
-        $mainSm->setService('OAuth2Provider/TokenTypeStrategy/Bearer', (new BearerFactory())->createService($mainSm));
+        $mainSm->setService('OAuth2Provider/TokenTypeStrategy/Bearer', (new BearerFactory())->__invoke($mainSm, ''));
         $mainSm->setService('OAuth2Provider/Options/ServerFeatureType', new ServerFeatureTypeConfiguration());
         $config = array(
             array(
@@ -186,13 +186,13 @@ class TokenTypeFactoryTest extends \PHPUnit\Framework\TestCase
             ),
         );
 
-        $ser = $this->TokenTypeFactory->createService($mainSm);
+        $ser = $this->TokenTypeFactory->__invoke($mainSm, '');
         $r = $ser($config, 'server3');
         $this->assertInstanceOf('OAuth2\TokenType\TokenTypeInterface', $r);
     }
 
     /**
-     * Tests TokenTypeFactory->createService()
+     * Tests TokenTypeFactory->__invoke()
      * @group test8
      */
     public function testCreateServiceWithConfigIsNull()
@@ -200,17 +200,17 @@ class TokenTypeFactoryTest extends \PHPUnit\Framework\TestCase
         $mainSm = new ServiceManager();
         $mainSm->setService('OAuth2Provider/Containers/TokenTypeContainer', new TokenTypeContainer());
         $mainSm->setService('OAuth2Provider/Options/TokenType/Bearer', new BearerConfigurations());
-        $mainSm->setService('OAuth2Provider/TokenTypeStrategy/Bearer', (new BearerFactory())->createService($mainSm));
+        $mainSm->setService('OAuth2Provider/TokenTypeStrategy/Bearer', (new BearerFactory())->__invoke($mainSm, ''));
         $mainSm->setService('OAuth2Provider/Options/ServerFeatureType', new ServerFeatureTypeConfiguration());
         $config = null;
 
-        $ser = $this->TokenTypeFactory->createService($mainSm);
+        $ser = $this->TokenTypeFactory->__invoke($mainSm, '');
         $r = $ser($config, 'server3');
         $this->assertNull($r);
     }
 
     /**
-     * Tests TokenTypeFactory->createService()
+     * Tests TokenTypeFactory->__invoke()
      * @group test8
      */
     public function testCreateServiceWithConfigIsEmpty()
@@ -218,11 +218,11 @@ class TokenTypeFactoryTest extends \PHPUnit\Framework\TestCase
         $mainSm = new ServiceManager();
         $mainSm->setService('OAuth2Provider/Containers/TokenTypeContainer', new TokenTypeContainer());
         $mainSm->setService('OAuth2Provider/Options/TokenType/Bearer', new BearerConfigurations());
-        $mainSm->setService('OAuth2Provider/TokenTypeStrategy/Bearer', (new BearerFactory())->createService($mainSm));
+        $mainSm->setService('OAuth2Provider/TokenTypeStrategy/Bearer', (new BearerFactory())->__invoke($mainSm, ''));
         $mainSm->setService('OAuth2Provider/Options/ServerFeatureType', new ServerFeatureTypeConfiguration());
         $config = array();
 
-        $ser = $this->TokenTypeFactory->createService($mainSm);
+        $ser = $this->TokenTypeFactory->__invoke($mainSm, '');
         $r = $ser($config, 'server3');
         $this->assertNull($r);
     }

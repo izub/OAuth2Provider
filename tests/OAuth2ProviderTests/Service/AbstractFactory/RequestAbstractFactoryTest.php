@@ -11,7 +11,6 @@ use Zend\ServiceManager\ServiceManager;
  */
 class RequestAbstractFactoryTest extends \PHPUnit\Framework\TestCase
 {
-
     /**
      *
      * @var RequestAbstractFactory
@@ -38,17 +37,17 @@ class RequestAbstractFactoryTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * Tests RequestAbstractFactory->canCreateServiceWithName()
+     * Tests RequestAbstractFactory->canCreate()
      */
     public function testCanCreateServiceWithNameReturnsFalseOnMalformedRname()
     {
         $sm = new ServiceManager();
-        $r = $this->RequestAbstractFactory->canCreateServiceWithName($sm, '', 'ouath2provide.xxx');
+        $r = $this->RequestAbstractFactory->canCreate($sm, 'ouath2provide.xxx');
         $this->assertFalse($r);
     }
 
     /**
-     * Tests RequestAbstractFactory->canCreateServiceWithName()
+     * Tests RequestAbstractFactory->canCreate()
      *
      */
     public function testCanCreateServiceWithNameUsingMainAndExistingSMInstance()
@@ -60,12 +59,12 @@ class RequestAbstractFactoryTest extends \PHPUnit\Framework\TestCase
         $sm->setService('OAuth2Provider/Options/Configuration', new Configuration());
         $sm->get('OAuth2Provider/Options/Configuration')->setMainServer($serverKey);
 
-        $r = $this->RequestAbstractFactory->canCreateServiceWithName($sm, '', "oauth2provider.server.{$serverKey}.request");
+        $r = $this->RequestAbstractFactory->canCreate($sm, "oauth2provider.server.{$serverKey}.request");
         $this->assertTrue($r);
     }
 
     /**
-     * Tests RequestAbstractFactory->canCreateServiceWithName()
+     * Tests RequestAbstractFactory->canCreate()
      * @expectedException \OAuth2Provider\Exception\ErrorException
      */
     public function testCanCreateServiceWithNameReturnsException()
@@ -76,11 +75,11 @@ class RequestAbstractFactoryTest extends \PHPUnit\Framework\TestCase
         $sm->setService('OAuth2Provider/Options/Configuration', new Configuration());
         $sm->get('OAuth2Provider/Options/Configuration')->setMainServer($serverKey);
 
-        $r = $this->RequestAbstractFactory->canCreateServiceWithName($sm, '', "oauth2provider.server.{$serverKey}.request");
+        $r = $this->RequestAbstractFactory->canCreate($sm, "oauth2provider.server.{$serverKey}.request");
     }
 
     /**
-     * Tests RequestAbstractFactory->canCreateServiceWithName()
+     * Tests RequestAbstractFactory->canCreate()
      */
     public function testCanCreateServiceReturnsFalseOnMalformedInvalidRequestName()
     {
@@ -90,7 +89,7 @@ class RequestAbstractFactoryTest extends \PHPUnit\Framework\TestCase
         $sm->setService('OAuth2Provider/Options/Configuration', new Configuration());
         $sm->get('OAuth2Provider/Options/Configuration')->setMainServer($serverKey);
 
-        $r = $this->RequestAbstractFactory->canCreateServiceWithName($sm, '', "oauth2provider.server.{$serverKey}.request");
+        $r = $this->RequestAbstractFactory->canCreate($sm, "oauth2provider.server.{$serverKey}.request");
         $this->assertFalse($r);
     }
 
@@ -108,9 +107,9 @@ class RequestAbstractFactoryTest extends \PHPUnit\Framework\TestCase
         $sm->get('OAuth2Provider/Options/Configuration')->setMainServer($serverKey);
 
         // execute
-        $this->RequestAbstractFactory->canCreateServiceWithName($sm, '', "oauth2provider.server.{$serverKey}.request");
+        $this->RequestAbstractFactory->canCreate($sm, "oauth2provider.server.{$serverKey}.request");
 
-        $r = $this->RequestAbstractFactory->createServiceWithName($sm, '', "oauth2provider.server.{$serverKey}.request");
+        $r = $this->RequestAbstractFactory->__invoke($sm, "oauth2provider.server.{$serverKey}.request");
         $this->assertInstanceOf('OAuth2\Request', $r);
     }
 }

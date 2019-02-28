@@ -1,11 +1,10 @@
 <?php
 namespace OAuth2Provider;
 
-use Zend\ServiceManager;
 use OAuth2\Server as OAuth2Server;
-use ReflectionClass;
+use Zend\ServiceManager;
 
-class Server implements ServiceManager\ServiceManagerAwareInterface, ServerInterface
+class Server implements ServerInterface
 {
     /**
      * @var \OAuth2\Server
@@ -84,23 +83,23 @@ class Server implements ServiceManager\ServiceManagerAwareInterface, ServerInter
 
     public function getRequest()
     {
-        if (null === $this->request) {
-            $this->request = $this->serviceManager->get('oauth2provider.server.main.request');
-        }
         return $this->request;
     }
 
     public function getResponse()
     {
-        if (null === $this->response) {
-            $this->response = $this->serviceManager->get('oauth2provider.server.main.response');
-        }
         return $this->response;
     }
 
-    public function setServiceManager(ServiceManager\ServiceManager $serviceManager)
+    public function setRequest(\OAuth2\Request $request): Server
     {
-        $this->serviceManager = $serviceManager;
+        $this->request = $request;
+        return $this;
+    }
+
+    public function setResponse(\OAuth2\Response $response): Server
+    {
+        $this->response = $response;
         return $this;
     }
 }

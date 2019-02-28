@@ -39,9 +39,9 @@ class ClientAssertionTypeFactoryTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * Tests ClientAssertionTypeFactory->createService()
+     * Tests ClientAssertionTypeFactory->__invoke()
      */
-    public function testCreateService()
+    public function test__invoke()
     {
         $sm = new ServiceManager();
 
@@ -49,7 +49,7 @@ class ClientAssertionTypeFactoryTest extends \PHPUnit\Framework\TestCase
         $sm->setService('OAuth2Provider/Containers/StorageContainer', new StorageContainer());
         $sm->setService('OAuth2Provider/Options/ServerFeatureType', new ServerFeatureTypeConfiguration());
         $sm->setService('OAuth2Provider/Options/ClientAssertionType/HttpBasic', new HttpBasicConfigurations());
-        $sm->setService('OAuth2Provider/ClientAssertionStrategy/HttpBasic', (new HttpBasicFactory())->createService($sm));
+        $sm->setService('OAuth2Provider/ClientAssertionStrategy/HttpBasic', (new HttpBasicFactory())->__invoke($sm, ''));
 
         $serverKey = uniqid();
         $storage = $sm->get('OAuth2Provider/Containers/StorageContainer');
@@ -64,7 +64,7 @@ class ClientAssertionTypeFactoryTest extends \PHPUnit\Framework\TestCase
             ),
         );
 
-        $service = $this->ClientAssertionTypeFactory->createService($sm);
+        $service = $this->ClientAssertionTypeFactory->__invoke($sm, '');
         $r = $service($strategies, $serverKey);
         $this->assertInstanceOf('OAuth2\ClientAssertionType\HttpBasic', $r);
     }

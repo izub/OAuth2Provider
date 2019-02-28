@@ -4,7 +4,6 @@ namespace OAuth2Provider\Builder;
 use OAuth2Provider\Containers\ContainerInterface;
 use OAuth2Provider\Exception;
 use OAuth2Provider\Lib\Utilities;
-
 use Zend\ServiceManager;
 
 class StrategyBuilder
@@ -145,13 +144,6 @@ class StrategyBuilder
                     // forward construction to specific strategy
                     $strategy = $serviceLocator->get($strategy);
                     $strategyObj = $strategy($strategyName, $strategyOptions, $this->serverKey);
-
-                    // as a convenience for closure inject the sm if its of a service aware interface
-                    if ($strategyObj instanceof ServiceManager\ServiceLocatorAwareInterface) {
-                        $strategyObj->setServiceLocator($serviceLocator);
-                    } elseif ($strategyObj instanceof ServiceManager\ServiceManagerAwareInterface) {
-                        $strategyObj->setServiceManager($serviceLocator);
-                    }
 
                     // unset common vars
                     unset($strategy, $strategyName, $strategyOptions);

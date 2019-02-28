@@ -38,9 +38,9 @@ class RefreshTokenFactoryTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * Tests RefreshTokenFactory->createService()
+     * Tests RefreshTokenFactory->__invoke()
      */
-    public function testCreateService()
+    public function test__invoke()
     {
         $mainSm = new ServiceManager();
 
@@ -51,13 +51,13 @@ class RefreshTokenFactoryTest extends \PHPUnit\Framework\TestCase
         $mainSm->setService('OAuth2Provider/Containers/StorageContainer', $storageCont);
         $mainSm->setService('OAuth2Provider/Options/GrantType/RefreshToken', new RefreshTokenConfigurations());
 
-        $s = $this->RefreshTokenFactory->createService($mainSm);
+        $s = $this->RefreshTokenFactory->__invoke($mainSm, '');
         $r = $s('OAuth2\GrantType\RefreshToken', $options, 'server3');
         $this->assertInstanceOf('OAuth2\GrantType\GrantTypeInterface', $r);
     }
 
     /**
-     * Tests RefreshTokenFactory->createService()
+     * Tests RefreshTokenFactory->__invoke()
      * @expectedException \OAuth2Provider\Exception\InvalidServerException
      */
     public function testCreateServiceReturnsException()
@@ -70,7 +70,7 @@ class RefreshTokenFactoryTest extends \PHPUnit\Framework\TestCase
         $mainSm->setService('OAuth2Provider/Containers/StorageContainer', $storageCont);
         $mainSm->setService('OAuth2Provider/Options/GrantType/RefreshToken', new RefreshTokenConfigurations());
 
-        $s = $this->RefreshTokenFactory->createService($mainSm);
+        $s = $this->RefreshTokenFactory->__invoke($mainSm, '');
         $s('OAuth2\GrantType\RefreshToken', $options, 'server3');
     }
 }

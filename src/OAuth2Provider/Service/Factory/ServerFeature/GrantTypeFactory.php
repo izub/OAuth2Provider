@@ -1,16 +1,16 @@
 <?php
 namespace OAuth2Provider\Service\Factory\ServerFeature;
 
+use Interop\Container\ContainerInterface;
 use OAuth2Provider\Builder\StrategyBuilder;
 use OAuth2Provider\Service\Factory\GrantTypeStrategy;
+use Zend\ServiceManager\Factory\FactoryInterface;
 
-use Zend\ServiceManager;
-
-class GrantTypeFactory implements ServiceManager\FactoryInterface
+class GrantTypeFactory implements FactoryInterface
 {
     /**
      * List of available strategies
-     * @var string
+     * @var array
      */
     protected $availableStrategy = array(
         GrantTypeStrategy\AuthorizationCodeFactory::IDENTIFIER => 'OAuth2Provider/GrantTypeStrategy/AuthorizationCode',
@@ -39,27 +39,29 @@ class GrantTypeFactory implements ServiceManager\FactoryInterface
     protected $strategyInterface = 'OAuth2\GrantType\GrantTypeInterface';
 
     /**
-     * Initialize an OAuth Grant Type object
+     * Create an object
      *
-     * @param ServiceLocatorInterface $serviceLocator
-     * @return mixed
+     * @param  ContainerInterface $container
+     * @param  string $requestedName
+     * @param  null|array $options
+     * @return callable
      */
-    public function createService(ServiceManager\ServiceLocatorInterface $serviceLocator)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         $strategies      = $this->availableStrategy;
         $concreteClasses = $this->concreteClasses;
         $interface       = $this->strategyInterface;
 
-        return function ($strategyTypes, $serverKey) use ($serviceLocator, $strategies, $concreteClasses, $interface) {
+        return function ($strategyTypes, $serverKey) use ($container, $strategies, $concreteClasses, $interface) {
             $strategy = new StrategyBuilder(
                 $strategyTypes,
                 $serverKey,
                 $strategies,
                 $concreteClasses,
-                $serviceLocator->get('OAuth2Provider/Containers/GrantTypeContainer'),
+                $container->get('OAuth2Provider/Containers/GrantTypeContainer'),
                 $interface
             );
-            return $strategy->initStrategyFeature($serviceLocator);
+            return $strategy->initStrategyFeature($container);
         };
     }
 }

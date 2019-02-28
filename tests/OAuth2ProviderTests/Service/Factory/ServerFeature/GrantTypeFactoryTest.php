@@ -33,9 +33,9 @@ class GrantTypeFactoryTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * Tests GrantTypeFactory->createService()
+     * Tests GrantTypeFactory->__invoke()
      */
-    public function testCreateService()
+    public function test__invoke()
     {
         $storage = new \OAuth2\GrantType\UserCredentials(new \OAuth2ProviderTests\Assets\StorageUserCredentials());
         $strategies = array(
@@ -44,7 +44,7 @@ class GrantTypeFactoryTest extends \PHPUnit\Framework\TestCase
 
         $mainSm = new ServiceManager();
         $mainSm->setService('OAuth2Provider/Containers/GrantTypeContainer', new GrantTypeContainer());
-        $r = $this->GrantTypeFactory->createService($mainSm);
+        $r = $this->GrantTypeFactory->__invoke($mainSm, '');
         $this->assertSame(array('user_credentials' => $storage), $r($strategies, 'server1'));
     }
 }

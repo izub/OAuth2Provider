@@ -1,24 +1,24 @@
 <?php
 namespace OAuth2Provider\Service\Factory;
 
-use OAuth2Provider\Options;
+use Interop\Container\ContainerInterface;
 use OAuth2Provider\Exception;
+use OAuth2Provider\Options;
+use Zend\ServiceManager\Factory\FactoryInterface;
 
-use Zend\ServiceManager;
-
-class ConfigurationFactory implements ServiceManager\FactoryInterface
+class ConfigurationFactory implements FactoryInterface
 {
-    protected $serviceLocator;
-
     /**
-     * Create service
+     * Create an object
      *
-     * @param ServiceLocatorInterface $serviceLocator
+     * @param  ContainerInterface $container
+     * @param  string $requestedName
+     * @param  null|array $options
      * @return mixed
      */
-    public function createService(ServiceManager\ServiceLocatorInterface $serviceLocator)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $config = $serviceLocator->get('Config');
+        $config = $container->get('Config');
 
         if (!isset($config['oauth2provider'])) {
             throw new Exception\InvalidConfigException(sprintf(

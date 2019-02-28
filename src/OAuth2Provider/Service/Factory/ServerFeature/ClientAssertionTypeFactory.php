@@ -1,17 +1,17 @@
 <?php
 namespace OAuth2Provider\Service\Factory\ServerFeature;
 
+use Interop\Container\ContainerInterface;
 use OAuth2Provider\Builder\StrategyBuilder;
-use OAuth2Provider\Service\Factory\ClientAssertionTypeStrategy;
 use OAuth2Provider\Lib\Utilities;
+use OAuth2Provider\Service\Factory\ClientAssertionTypeStrategy;
+use Zend\ServiceManager\Factory\FactoryInterface;
 
-use Zend\ServiceManager;
-
-class ClientAssertionTypeFactory implements ServiceManager\FactoryInterface
+class ClientAssertionTypeFactory implements FactoryInterface
 {
     /**
      * List of available strategies
-     * @var string
+     * @var array
      */
     protected $availableStrategies = array(
         ClientAssertionTypeStrategy\HttpBasicFactory::IDENTIFIER => 'OAuth2Provider/ClientAssertionStrategy/HttpBasic',
@@ -32,12 +32,14 @@ class ClientAssertionTypeFactory implements ServiceManager\FactoryInterface
     protected $strategyInterface = 'OAuth2\ClientAssertionType\ClientAssertionTypeInterface';
 
     /**
-     * Initialize an OAuth Scope object
+     * Create an object
      *
-     * @param ServiceLocatorInterface $serviceLocator
-     * @return mixed
+     * @param  ContainerInterface $container
+     * @param  string $requestedName
+     * @param  null|array $options
+     * @return callable
      */
-    public function createService(ServiceManager\ServiceLocatorInterface $serviceLocator)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         $availableStrategies = $this->availableStrategies;
         $concreteClasses     = $this->concreteClasses;
@@ -47,7 +49,7 @@ class ClientAssertionTypeFactory implements ServiceManager\FactoryInterface
             $availableStrategies,
             $concreteClasses,
             $interface,
-            $serviceLocator
+            $container
         ) {
             if (!empty($strategy)) {
                 $strategy = new StrategyBuilder(
@@ -55,10 +57,10 @@ class ClientAssertionTypeFactory implements ServiceManager\FactoryInterface
                     $serverKey,
                     $availableStrategies,
                     $concreteClasses,
-                    $serviceLocator->get('OAuth2Provider/Containers/ClientAssertionContainer'),
+                    $container->get('OAuth2Provider/Containers/ClientAssertionContainer'),
                     $interface
                 );
-                $strategy = $strategy->initStrategyFeature($serviceLocator);
+                $strategy = $strategy->initStrategyFeature($container);
 
                 // check if valid, if not explicitly return null
                 if (!empty($strategy)) {

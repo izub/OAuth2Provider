@@ -35,9 +35,9 @@ class AuthorizationCodeFactoryTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * Tests UserCredentialsFactory->createService()
+     * Tests UserCredentialsFactory->__invoke()
      */
-    public function testCreateService()
+    public function test__invoke()
     {
         $mainSm = new ServiceManager();
 
@@ -49,13 +49,13 @@ class AuthorizationCodeFactoryTest extends \PHPUnit\Framework\TestCase
 
         $classname = 'OAuth2\ResponseType\AuthorizationCode';
         $options = array('storage' => 'authorization_code');
-        $r = $this->AuthorizationCodeFactory->createService($mainSm);
+        $r = $this->AuthorizationCodeFactory->__invoke($mainSm, '');
         $r = $r($classname, $options, 'server1');
         $this->assertInstanceOf('OAuth2\ResponseType\AuthorizationCodeInterface', $r);
     }
 
     /**
-     * Tests UserCredentialsFactory->createService()
+     * Tests UserCredentialsFactory->__invoke()
      * @expectedException \OAuth2Provider\Exception\InvalidServerException
      */
     public function testCreateServiceReturnsException()
@@ -70,7 +70,7 @@ class AuthorizationCodeFactoryTest extends \PHPUnit\Framework\TestCase
 
         $classname = 'OAuth2\ResponseType\AuthorizationCode';
         $options = array('storage' => 'authorization_code');
-        $r = $this->AuthorizationCodeFactory->createService($mainSm);
+        $r = $this->AuthorizationCodeFactory->__invoke($mainSm, '');
         $r = $r($classname, $options, 'server1');
         $this->assertInstanceOf('OAuth2\ResponseType\AuthorizationCodeInterface', $r);
     }

@@ -33,9 +33,9 @@ class ConfigurationFactoryTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * Tests ConfigurationFactory->createService()
+     * Tests ConfigurationFactory->__invoke()
      */
-    public function testCreateService()
+    public function test__invoke()
     {
         $config = array(
             'oauth2provider' => array(
@@ -48,14 +48,14 @@ class ConfigurationFactoryTest extends \PHPUnit\Framework\TestCase
         $mainSm = new ServiceManager();
         $mainSm->setService('Config', $config);
 
-        $configOption = $this->ConfigurationFactory->createService($mainSm);
+        $configOption = $this->ConfigurationFactory->__invoke($mainSm, '');
         $this->assertEquals(array('OauthServer'), $configOption->getServers());
         $this->assertEquals('OauthController', $configOption->getDefaultController());
         $this->assertEquals('client', $configOption->getMainServer());
     }
 
     /**
-     * Tests ConfigurationFactory->createService()
+     * Tests ConfigurationFactory->__invoke()
      */
     public function testCreateServiceWithMainServerEmptyValueShouldUseDefault()
     {
@@ -68,12 +68,12 @@ class ConfigurationFactoryTest extends \PHPUnit\Framework\TestCase
         $mainSm = new ServiceManager();
         $mainSm->setService('Config', $config);
 
-        $configOption = $this->ConfigurationFactory->createService($mainSm);
+        $configOption = $this->ConfigurationFactory->__invoke($mainSm, '');
         $this->assertEquals('default', $configOption->getMainServer());
     }
 
     /**
-     * Tests ConfigurationFactory->createService()
+     * Tests ConfigurationFactory->__invoke()
      * @expectedException \OAuth2Provider\Exception\InvalidConfigException
      */
     public function testCreateServiceReturnsException()
@@ -83,7 +83,7 @@ class ConfigurationFactoryTest extends \PHPUnit\Framework\TestCase
         $mainSm = new ServiceManager();
         $mainSm->setService('Config', $config);
 
-        $configOption = $this->ConfigurationFactory->createService($mainSm);
+        $configOption = $this->ConfigurationFactory->__invoke($mainSm, '');
     }
 }
 

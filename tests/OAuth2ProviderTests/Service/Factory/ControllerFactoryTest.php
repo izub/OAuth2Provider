@@ -36,7 +36,7 @@ class ControllerFactoryTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * Tests ControllerFactory->createService()
+     * Tests ControllerFactory->__invoke()
      * @group test1
      */
     public function testCreateServiceWithValidControllerUsesDefaultController()
@@ -58,20 +58,12 @@ class ControllerFactoryTest extends \PHPUnit\Framework\TestCase
         $mainSm->setService('OAuth2Provider/Options/Configuration', new Configuration($config));
         $mainSm->setService('Application', $application);
 
-
-        $pluginSM = $this->getMockBuilder('Zend\ServiceManager\ServiceManager')
-            ->setMethods(array('getServiceLocator'))
-            ->getMock();
-        $pluginSM->expects($this->any())
-            ->method('getServiceLocator')
-            ->will($this->returnValue($mainSm));
-
-        $r = $this->ControllerFactory->createService($pluginSM);
+        $r = $this->ControllerFactory->__invoke($mainSm, '');
         $this->assertInstanceOf('OAuth2Provider\Controller\ControllerInterface', $r);
     }
 
     /**
-     * Tests ControllerFactory->createService()
+     * Tests ControllerFactory->__invoke()
      * @group test2
      */
     public function testCreateServiceWithValidControllerUsesServerSpecificController()
@@ -95,19 +87,12 @@ class ControllerFactoryTest extends \PHPUnit\Framework\TestCase
         $mainSm->setService('OAuth2Provider/Options/Configuration', new Configuration($config));
         $mainSm->setService('Application', $application);
 
-        $pluginSM = $this->getMockBuilder('Zend\ServiceManager\ServiceManager')
-            ->setMethods(array('getServiceLocator'))
-            ->getMock();
-        $pluginSM->expects($this->any())
-            ->method('getServiceLocator')
-            ->will($this->returnValue($mainSm));
-
-        $r = $this->ControllerFactory->createService($pluginSM);
+        $r = $this->ControllerFactory->__invoke($mainSm, '');
         $this->assertInstanceOf('OAuth2Provider\Controller\ControllerInterface', $r);
     }
 
     /**
-     * Tests ControllerFactory->createService()
+     * Tests ControllerFactory->__invoke()
      * @group test3
      */
     public function testCreateServiceWithValidControllerUsesServerSpecificControllerOnMultiServers()
@@ -120,7 +105,7 @@ class ControllerFactoryTest extends \PHPUnit\Framework\TestCase
         $mainSm = new ServiceManager();
         $mainSm->setService('Application', $application);
 
-        $routeMatch = new \Zend\Mvc\Router\RouteMatch(array('version' => 'v2'));
+        $routeMatch = new \Zend\Router\RouteMatch(array('version' => 'v2'));
         $mainSm->get('Application')->getMvcEvent()->setRouteMatch($routeMatch);
 
         $config = array(
@@ -143,19 +128,12 @@ class ControllerFactoryTest extends \PHPUnit\Framework\TestCase
 
         $mainSm->setService('OAuth2Provider/Options/Configuration', new Configuration($config));
 
-        $pluginSM = $this->getMockBuilder('Zend\ServiceManager\ServiceManager')
-            ->setMethods(array('getServiceLocator'))
-            ->getMock();
-        $pluginSM->expects($this->exactly(2))
-            ->method('getServiceLocator')
-            ->will($this->returnValue($mainSm));
-
-        $r = $this->ControllerFactory->createService($pluginSM);
+        $r = $this->ControllerFactory->__invoke($mainSm, '');
         $this->assertInstanceOf('OAuth2Provider\Controller\ControllerInterface', $r);
     }
 
     /**
-     * Tests ControllerFactory->createService()
+     * Tests ControllerFactory->__invoke()
      * @group test4
      * @expectedException \OAuth2Provider\Exception\InvalidConfigException
      */
@@ -183,14 +161,7 @@ class ControllerFactoryTest extends \PHPUnit\Framework\TestCase
         $mainSm->setService('Application', $application);
         $mainSm->setService('Config', $config);
 
-        $pluginSM = $this->getMockBuilder('Zend\ServiceManager\ServiceManager')
-            ->setMethods(array('getServiceLocator'))
-            ->getMock();
-        $pluginSM
-            ->method('getServiceLocator')
-            ->will($this->returnValue($mainSm));
-
-        $r = $this->ControllerFactory->createService($pluginSM);
+        $r = $this->ControllerFactory->__invoke($mainSm, '');
     }
 }
 

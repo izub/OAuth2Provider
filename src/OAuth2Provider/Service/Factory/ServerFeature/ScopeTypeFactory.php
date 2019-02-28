@@ -1,17 +1,17 @@
 <?php
 namespace OAuth2Provider\Service\Factory\ServerFeature;
 
+use Interop\Container\ContainerInterface;
 use OAuth2Provider\Builder\StrategyBuilder;
 use OAuth2Provider\Lib\Utilities;
 use OAuth2Provider\Service\Factory\ScopeStrategy;
+use Zend\ServiceManager\Factory\FactoryInterface;
 
-use Zend\ServiceManager;
-
-class ScopeTypeFactory implements ServiceManager\FactoryInterface
+class ScopeTypeFactory implements FactoryInterface
 {
     /**
      * List of available strategies
-     * @var string
+     * @var array
      */
     protected $availableStrategies = array(
         ScopeStrategy\ScopeFactory::IDENTIFIER => 'OAuth2Provider/ScopeStrategy/Scope',
@@ -32,12 +32,14 @@ class ScopeTypeFactory implements ServiceManager\FactoryInterface
     protected $strategyInterface = 'OAuth2\ScopeInterface';
 
     /**
-     * Initialize an OAuth Scope object
+     * Create an object
      *
-     * @param ServiceLocatorInterface $serviceLocator
-     * @return mixed
+     * @param  ContainerInterface $container
+     * @param  string $requestedName
+     * @param  null|array $options
+     * @return callable
      */
-    public function createService(ServiceManager\ServiceLocatorInterface $serviceLocator)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         $availableStrategies = $this->availableStrategies;
         $concreteClasses     = $this->concreteClasses;
@@ -47,7 +49,7 @@ class ScopeTypeFactory implements ServiceManager\FactoryInterface
             $availableStrategies,
             $concreteClasses,
             $interface,
-            $serviceLocator
+            $container
         ) {
             if (!empty($strategy)) {
                 $strategy = new StrategyBuilder(
@@ -55,10 +57,10 @@ class ScopeTypeFactory implements ServiceManager\FactoryInterface
                     $serverKey,
                     $availableStrategies,
                     $concreteClasses,
-                    $serviceLocator->get('OAuth2Provider/Containers/ScopeTypeContainer'),
+                    $container->get('OAuth2Provider/Containers/ScopeTypeContainer'),
                     $interface
                 );
-                $strategy = $strategy->initStrategyFeature($serviceLocator);
+                $strategy = $strategy->initStrategyFeature($container);
 
                 // check if valid, if not explicitly return null
                 if (!empty($strategy)) {

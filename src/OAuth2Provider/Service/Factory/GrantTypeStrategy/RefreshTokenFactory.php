@@ -1,38 +1,40 @@
 <?php
 namespace OAuth2Provider\Service\Factory\GrantTypeStrategy;
 
+use Interop\Container\ContainerInterface;
 use OAuth2Provider\Exception;
 use OAuth2Provider\Lib\Utilities;
+use Zend\ServiceManager\Factory\FactoryInterface;
 
-use Zend\ServiceManager;
-
-class RefreshTokenFactory implements ServiceManager\FactoryInterface
+class RefreshTokenFactory implements FactoryInterface
 {
     /**
      * Identifiers
      * This will be used for defaults
-     * @var ustring
+     * @var string
      */
     const IDENTIFIER = 'refresh_token';
 
     /**
-     * Initialize an OAuth Access Token Response type
+     * Create an object
      *
-     * @param ServiceLocatorInterface $serviceLocator
-     * @return mixed
+     * @param  ContainerInterface $container
+     * @param  string $requestedName
+     * @param  null|array $options
+     * @return callable
      */
-    public function createService(ServiceManager\ServiceLocatorInterface $serviceLocator)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        return function ($refreshTokenClassName, $options, $serverKey) use ($serviceLocator) {
+        return function ($refreshTokenClassName, $options, $serverKey) use ($container) {
 
-            $options = $serviceLocator->get('OAuth2Provider/Options/GrantType/RefreshToken')->setFromArray($options);
+            $options = $container->get('OAuth2Provider/Options/GrantType/RefreshToken')->setFromArray($options);
 
             // check if there is a direct defined 'token storage'
             $refreshTokenStorage = Utilities::storageLookup(
                 $serverKey,
                 $options->getRefreshTokenStorage() ?: $options->getStorage(),
-                $serviceLocator->get('OAuth2Provider/Containers/StorageContainer'),
-                $serviceLocator,
+                $container->get('OAuth2Provider/Containers/StorageContainer'),
+                $container,
                 RefreshTokenFactory::IDENTIFIER
             );
 

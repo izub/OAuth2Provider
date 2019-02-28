@@ -1,11 +1,10 @@
 <?php
 namespace OAuth2Provider\Service\AbstractFactory;
 
-use OAuth2Provider\Lib\Utilities;
+use Interop\Container\ContainerInterface;
+use Zend\ServiceManager\Factory\AbstractFactoryInterface;
 
-use Zend\ServiceManager;
-
-class ContainerAbstractFactory implements ServiceManager\AbstractFactoryInterface
+class ContainerAbstractFactory implements AbstractFactoryInterface
 {
     /**
      * Pattern example (must be underscore separated):
@@ -58,14 +57,13 @@ class ContainerAbstractFactory implements ServiceManager\AbstractFactoryInterfac
     protected $contents;
 
     /**
-     * Determine if we can create a service with name
+     * Can the factory create an instance for the service?
      *
-     * @param ServiceLocatorInterface $serviceLocator
-     * @param $name
-     * @param $requestedName
+     * @param  ContainerInterface $container
+     * @param  string $requestedName
      * @return bool
      */
-    public function canCreateServiceWithName(ServiceManager\ServiceLocatorInterface $serviceLocator, $name, $requestedName)
+    public function canCreate(ContainerInterface $container, $requestedName)
     {
         // for performance, do a prelim check before checking against regex
         if (0 !== strpos($requestedName, 'oauth2provider.server.')) {
@@ -76,18 +74,18 @@ class ContainerAbstractFactory implements ServiceManager\AbstractFactoryInterfac
         if (preg_match($pattern, $requestedName, $matches) && !empty($matches)) {
 
             $this->serverKey = ($matches[1] === 'main')
-                ? $serviceLocator->get('OAuth2Provider/Options/Configuration')->getMainServer()
+                ? $container->get('OAuth2Provider/Options/Configuration')->getMainServer()
                 : $matches[1];
             $this->container    = $matches[2];
             $this->containerKey = isset($matches[3]) ? $matches[3] : null;
 
             // initialize the server
-            if (!Utilities::hasSMInstance($serviceLocator, "oauth2provider.server.{$this->serverKey}")) {
-                $serviceLocator->get("oauth2provider.server.{$this->serverKey}");
+            if (!$container->has("oauth2provider.server.{$this->serverKey}")) {
+                $container->get("oauth2provider.server.{$this->serverKey}");
             }
 
             if (isset($this->containers[$this->container])) {
-                $container = $serviceLocator->get($this->containers[$this->container]);
+                $container = $container->get($this->containers[$this->container]);
                 if (isset($this->containerKey)) {
                     if ($container->isExistingServerContentInKey($this->serverKey, $this->containerKey)) {
                         $this->contents = $container->getServerContentsFromKey($this->serverKey, $this->containerKey);
@@ -106,14 +104,14 @@ class ContainerAbstractFactory implements ServiceManager\AbstractFactoryInterfac
     }
 
     /**
-     * Create service with name
+     * Create an object
      *
-     * @param ServiceLocatorInterface $serviceLocator
-     * @param $name
-     * @param $requestedName
-     * @return mixed
+     * @param  ContainerInterface $container
+     * @param  string $requestedName
+     * @param  null|array $options
+     * @return object
      */
-    public function createServiceWithName(ServiceManager\ServiceLocatorInterface $serviceLocator, $name, $requestedName)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         return $this->contents;
     }

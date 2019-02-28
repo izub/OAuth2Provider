@@ -1,16 +1,16 @@
 <?php
 namespace OAuth2Provider\Service\Factory\ServerFeature;
 
+use Interop\Container\ContainerInterface;
 use OAuth2Provider\Builder\StrategyBuilder;
 use OAuth2Provider\Service\Factory\ResponseTypeStrategy;
+use Zend\ServiceManager\Factory\FactoryInterface;
 
-use Zend\ServiceManager;
-
-class ResponseTypeFactory implements ServiceManager\FactoryInterface
+class ResponseTypeFactory implements FactoryInterface
 {
     /**
      * List of available strategies
-     * @var string
+     * @var array
      */
     protected $availableStrategy = array(
         ResponseTypeStrategy\AccessTokenFactory::IDENTIFIER       => 'OAuth2Provider/GrantTypeStrategy/AccessToken',
@@ -42,12 +42,14 @@ class ResponseTypeFactory implements ServiceManager\FactoryInterface
     protected $strategyInterface = 'OAuth2\ResponseType\ResponseTypeInterface';
 
     /**
-     * Initialize an OAuth Response Type object
+     * Create an object
      *
-     * @param ServiceLocatorInterface $serviceLocator
-     * @return mixed
+     * @param  ContainerInterface $container
+     * @param  string $requestedName
+     * @param  null|array $options
+     * @return callable
      */
-    public function createService(ServiceManager\ServiceLocatorInterface $serviceLocator)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         $strategies      = $this->availableStrategy;
         $concreteClasses = $this->concreteClasses;
@@ -55,7 +57,7 @@ class ResponseTypeFactory implements ServiceManager\FactoryInterface
         $keyMappings     = $this->keyMappings;
 
         return function ($strategyTypes, $serverKey) use (
-            $serviceLocator,
+            $container,
             $strategies,
             $concreteClasses,
             $interface,
@@ -66,13 +68,13 @@ class ResponseTypeFactory implements ServiceManager\FactoryInterface
                 $serverKey,
                 $strategies,
                 $concreteClasses,
-                $serviceLocator->get('OAuth2Provider/Containers/ResponseTypeContainer'),
+                $container->get('OAuth2Provider/Containers/ResponseTypeContainer'),
                 $interface
             );
 
             // map keys to comply with server
             $result = array();
-            foreach ($strategy->initStrategyFeature($serviceLocator) as $key => $val) {
+            foreach ($strategy->initStrategyFeature($container) as $key => $val) {
                 if (isset($keyMappings[$key])) {
                     $result[$keyMappings[$key]] = $val;
                 }

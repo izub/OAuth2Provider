@@ -1,14 +1,12 @@
 <?php
 namespace OAuth2Provider\Service\AbstractFactory;
 
-use OAuth2Provider\Exception;
-use OAuth2Provider\Lib\Utilities;
-
+use Interop\Container\ContainerInterface;
 use OAuth2\Response;
+use OAuth2Provider\Exception;
+use Zend\ServiceManager\Factory\AbstractFactoryInterface;
 
-use Zend\ServiceManager;
-
-class ResponseAbstractFactory implements ServiceManager\AbstractFactoryInterface
+class ResponseAbstractFactory implements AbstractFactoryInterface
 {
     /**
      * @var string
@@ -21,14 +19,13 @@ class ResponseAbstractFactory implements ServiceManager\AbstractFactoryInterface
     protected $serverKey;
 
     /**
-     * Determine if we can create a service with name
+     * Can the factory create an instance for the service?
      *
-     * @param ServiceLocatorInterface $serviceLocator
-     * @param $name
-     * @param $requestedName
+     * @param  ContainerInterface $container
+     * @param  string $requestedName
      * @return bool
      */
-    public function canCreateServiceWithName(ServiceManager\ServiceLocatorInterface $serviceLocator, $name, $requestedName)
+    public function canCreate(ContainerInterface $container, $requestedName)
     {
         // for performance, do a prelim check before checking against regex
         if (0 !== strpos($requestedName, 'oauth2provider.server.')) {
@@ -39,10 +36,10 @@ class ResponseAbstractFactory implements ServiceManager\AbstractFactoryInterface
             && !empty($matches[1])
         ) {
             $this->serverKey = ($matches[1] === 'main')
-                ? $serviceLocator->get('OAuth2Provider/Options/Configuration')->getMainServer()
+                ? $container->get('OAuth2Provider/Options/Configuration')->getMainServer()
                 : $matches[1];
 
-            if (Utilities::hasSMInstance($serviceLocator, "oauth2provider.server.{$this->serverKey}")) {
+            if ($container->has("oauth2provider.server.{$this->serverKey}")) {
                 return true;
             } else {
                 throw new Exception\ErrorException(sprintf(
@@ -57,16 +54,16 @@ class ResponseAbstractFactory implements ServiceManager\AbstractFactoryInterface
     }
 
     /**
-     * Create service with name
+     * Create an object
      *
-     * @param ServiceLocatorInterface $serviceLocator
-     * @param $name
-     * @param $requestedName
-     * @return mixed
+     * @param  ContainerInterface $container
+     * @param  string $requestedName
+     * @param  null|array $options
+     * @return object
      */
-    public function createServiceWithName(ServiceManager\ServiceLocatorInterface $serviceLocator, $name, $requestedName)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $responseContainer = $serviceLocator->get('OAuth2Provider/Containers/ResponseContainer');
+        $responseContainer = $container->get('OAuth2Provider/Containers/ResponseContainer');
         $responseContainer[$this->serverKey] = new Response();
 
         return $responseContainer->getServerContents($this->serverKey);

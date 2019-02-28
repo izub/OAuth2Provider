@@ -1,23 +1,26 @@
 <?php
 namespace OAuth2Provider\Service\Factory;
 
-use Zend\ServiceManager;
+use Interop\Container\ContainerInterface;
+use Zend\ServiceManager\Factory\FactoryInterface;
 
-class MainServerFactory implements ServiceManager\FactoryInterface
+class MainServerFactory implements FactoryInterface
 {
     /**
      * Initialized the Main Server used by the controllers
      *
      * The main server call is: oauth2provider.server.main
      *
-     * @param ServiceLocatorInterface $serviceLocator
+     * @param  ContainerInterface $container
+     * @param  string $requestedName
+     * @param  null|array $options
      * @return mixed
      */
-    public function createService(ServiceManager\ServiceLocatorInterface $serviceLocator)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $configuration = $serviceLocator->get('OAuth2Provider/Options/Configuration');
+        $configuration = $container->get('OAuth2Provider/Options/Configuration');
 
         // initialize the main server via the abstract server factory;
-        return $serviceLocator->get('oauth2provider.server.' . $configuration->getMainServer());
+        return $container->get('oauth2provider.server.' . $configuration->getMainServer());
     }
 }

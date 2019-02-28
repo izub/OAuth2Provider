@@ -37,9 +37,9 @@ class AuthorizationCodeFactoryTypeTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * Tests AuthorizationCodeFactory->createService()
+     * Tests AuthorizationCodeFactory->__invoke()
      */
-    public function testCreateService()
+    public function test__invoke()
     {
         $mainSm = new ServiceManager();
         $storageCont = new StorageContainer();
@@ -49,13 +49,13 @@ class AuthorizationCodeFactoryTypeTest extends \PHPUnit\Framework\TestCase
         $mainSm->setService('OAuth2Provider/Containers/StorageContainer', $storageCont);
         $mainSm->setService('OAuth2Provider/Options/GrantType/AuthorizationCode', new AuthorizationCodeConfigurations());
 
-        $r = $this->AuthorizationCodeFactory->createService($mainSm);
+        $r = $this->AuthorizationCodeFactory->__invoke($mainSm, '');
         $r = $r('OAuth2\GrantType\AuthorizationCode', $options, 'server4');
         $this->assertInstanceOf('OAuth2\GrantType\AuthorizationCode', $r);
     }
 
     /**
-     * Tests AuthorizationCodeFactory->createService()
+     * Tests AuthorizationCodeFactory->__invoke()
      * @expectedException \OAuth2Provider\Exception\InvalidServerException
      */
     public function testCreateServiceReturnsException()
@@ -69,7 +69,7 @@ class AuthorizationCodeFactoryTypeTest extends \PHPUnit\Framework\TestCase
         $mainSm->setService('OAuth2Provider/Containers/StorageContainer', $storageCont);
         $mainSm->setService('OAuth2Provider/Options/GrantType/AuthorizationCode', new AuthorizationCodeConfigurations());
 
-        $r = $this->AuthorizationCodeFactory->createService($mainSm);
+        $r = $this->AuthorizationCodeFactory->__invoke($mainSm, '');
         $r = $r('OAuth2\GrantType\AuthorizationCode', $options, 'server4');
     }
 }

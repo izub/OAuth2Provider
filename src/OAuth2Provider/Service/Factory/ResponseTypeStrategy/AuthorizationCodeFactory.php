@@ -1,12 +1,12 @@
 <?php
 namespace OAuth2Provider\Service\Factory\ResponseTypeStrategy;
 
+use Interop\Container\ContainerInterface;
 use OAuth2Provider\Exception;
 use OAuth2Provider\Lib\Utilities;
+use Zend\ServiceManager\Factory\FactoryInterface;
 
-use Zend\ServiceManager;
-
-class AuthorizationCodeFactory implements ServiceManager\FactoryInterface
+class AuthorizationCodeFactory implements FactoryInterface
 {
     /**
      * Identifiers
@@ -16,22 +16,24 @@ class AuthorizationCodeFactory implements ServiceManager\FactoryInterface
     const IDENTIFIER = 'authorization_code';
 
     /**
-     * Initialize an OAuth Authorization Code Response type
+     * Create an object
      *
-     * @param ServiceLocatorInterface $serviceLocator
-     * @return mixed
+     * @param  ContainerInterface $container
+     * @param  string $requestedName
+     * @param  null|array $options
+     * @return callable
      */
-    public function createService(ServiceManager\ServiceLocatorInterface $serviceLocator)
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        return function ($authorizationCodeClassName, $options, $serverKey) use ($serviceLocator) {
-            $options = $serviceLocator->get('OAuth2Provider/Options/ResponseType/AuthorizationCode')->setFromArray($options);
+        return function ($authorizationCodeClassName, $options, $serverKey) use ($container) {
+            $options = $container->get('OAuth2Provider/Options/ResponseType/AuthorizationCode')->setFromArray($options);
 
             // check if there is a direct defined 'token storage'
             $authorizationCodeStorage = Utilities::storageLookup(
                 $serverKey,
                 $options->getAuthorizationCodeStorage() ?: $options->getStorage(),
-                $serviceLocator->get('OAuth2Provider/Containers/StorageContainer'),
-                $serviceLocator,
+                $container->get('OAuth2Provider/Containers/StorageContainer'),
+                $container,
                 AuthorizationCodeFactory::IDENTIFIER
             );
 

@@ -10,6 +10,12 @@
     "require": {
         "php": ">=5.3.3",
         "zendframework/zendframework": "2.2.*",
-        "izub/fdl-oauth2-provider": "dev-%branch%"
-    }
+        "franz-deleon/fdl-oauth2-provider": "dev-%branch%"
+    },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/izub/OAuth2Provider"
+        }
+    ]
 }

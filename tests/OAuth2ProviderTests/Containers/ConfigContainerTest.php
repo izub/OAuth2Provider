@@ -32,7 +32,7 @@ class ConfigContainerTest extends \PHPUnit_Framework_TestCase
     /**
      * Tests ConfigContainer->getServerContentsFromKey()
      * @group test1
-     * @expectedException OAuth2Provider\Exception\ErrorException
+     * @expectedException \OAuth2Provider\Exception\ErrorException
      */
     public function testGetServerContentsFromKey()
     {

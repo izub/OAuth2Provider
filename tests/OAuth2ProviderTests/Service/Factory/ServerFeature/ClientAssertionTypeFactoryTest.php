@@ -1,9 +1,15 @@
 <?php
 namespace OAuth2ProviderTests;
 
+use OAuth2Provider\Containers\ClientAssertionTypeContainer;
+use OAuth2Provider\Containers\StorageContainer;
+use OAuth2Provider\Options\ClientAssertionType\HttpBasicConfigurations;
+use OAuth2Provider\Options\ServerFeatureTypeConfiguration;
+use OAuth2Provider\Service\Factory\ClientAssertionTypeStrategy\HttpBasicFactory;
 use OAuth2ProviderTests\Bootstrap;
 
 use OAuth2Provider\Service\Factory\ServerFeature\ClientAssertionTypeFactory;
+use Zend\ServiceManager\ServiceManager;
 
 /**
  * ClientAssertionTypeFactory test case.
@@ -38,11 +44,17 @@ class ClientAssertionTypeFactoryTest extends \PHPUnit_Framework_TestCase
      */
     public function testCreateService()
     {
-        $sm = Bootstrap::getServiceManager()->setAllowOverride(true);
+        $sm = new ServiceManager();
+
+        $sm->setService('OAuth2Provider/Containers/ClientAssertionContainer', new ClientAssertionTypeContainer());
+        $sm->setService('OAuth2Provider/Containers/StorageContainer', new StorageContainer());
+        $sm->setService('OAuth2Provider/Options/ServerFeatureType', new ServerFeatureTypeConfiguration());
+        $sm->setService('OAuth2Provider/Options/ClientAssertionType/HttpBasic', new HttpBasicConfigurations());
+        $sm->setService('OAuth2Provider/ClientAssertionStrategy/HttpBasic', (new HttpBasicFactory())->createService($sm));
 
         $serverKey = uniqid();
         $storage = $sm->get('OAuth2Provider/Containers/StorageContainer');
-        $storage[$serverKey]['client_credentials'] = new Assets\Storage\ClientCredentialsStorage();
+        $storage[$serverKey]['client_credentials'] = new \OAuth2ProviderTests\Assets\Storage\ClientCredentialsStorage();
 
         $strategies = array(
             'name' => 'http_basic',

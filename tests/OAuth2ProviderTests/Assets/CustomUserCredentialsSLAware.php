@@ -9,6 +9,7 @@ use OAuth2\ResponseInterface;
 use Zend\ServiceManager;
 
 use OAuth2\GrantType\UserCredentials;
+use Zend\ServiceManager\ServiceLocatorInterface;
 
 class CustomUserCredentialsSLAware extends UserCredentials implements GrantTypeInterface, ServiceManager\ServiceLocatorAwareInterface
 {

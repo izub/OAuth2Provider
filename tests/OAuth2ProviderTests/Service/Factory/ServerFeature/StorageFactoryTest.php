@@ -1,7 +1,11 @@
 <?php
 namespace OAuth2ProviderTests;
 
+use OAuth2Provider\Containers\GrantTypeContainer;
+use OAuth2Provider\Containers\StorageContainer;
+use OAuth2Provider\Service\Factory\ServerFeature\GrantTypeFactory;
 use OAuth2Provider\Service\Factory\ServerFeature\StorageFactory;
+use Zend\ServiceManager\ServiceManager;
 
 /**
  * GrantTypeFactory test case.
@@ -9,7 +13,7 @@ use OAuth2Provider\Service\Factory\ServerFeature\StorageFactory;
 class StorageFactoryTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var GrantTypeFactory
+     * @var StorageFactory
      */
     private $storageFactory;
 
@@ -42,7 +46,8 @@ class StorageFactoryTest extends \PHPUnit_Framework_TestCase
             'user_credentials' => new \stdClass(),
         );
 
-        $mainSm = Bootstrap::getServiceManager()->setAllowOverride(true);
+        $mainSm = new ServiceManager();
+        $mainSm->setService('OAuth2Provider/Containers/StorageContainer', new StorageContainer());
 
         $storageFactory = $this->storageFactory->createService($mainSm);
         $r = $storageFactory($storages, 'server_key');
@@ -50,7 +55,7 @@ class StorageFactoryTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Tests GrantTypeFactory->createService()
-     * @expectedException OAuth2Provider\Exception\InvalidConfigException
+     * @expectedException \OAuth2Provider\Exception\InvalidConfigException
      */
     public function testCreateServiceReturnsException()
     {
@@ -58,7 +63,8 @@ class StorageFactoryTest extends \PHPUnit_Framework_TestCase
             'not_in_valid' => new \stdClass(),
         );
 
-        $mainSm = Bootstrap::getServiceManager()->setAllowOverride(true);
+        $mainSm = new ServiceManager();
+        $mainSm->setService('OAuth2Provider/Containers/StorageContainer', new StorageContainer());
 
         $storageFactory = $this->storageFactory->createService($mainSm);
         $r = $storageFactory($storages, 'server_key');

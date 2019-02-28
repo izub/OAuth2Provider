@@ -1,7 +1,9 @@
 <?php
 namespace OAuth2ProviderTests;
 
+use OAuth2Provider\Containers\StorageContainer;
 use OAuth2Provider\Lib\Utilities;
+use Zend\ServiceManager\ServiceManager;
 
 /**
  * Utilities test case.
@@ -36,7 +38,7 @@ class UtilitiesTest extends \PHPUnit_Framework_TestCase
      */
     public function testCreateClassReturnsSmObject()
     {
-        $sm = Bootstrap::getServiceManager()->setAllowOverride(true);
+        $sm = new ServiceManager();
         $sm->setService('someObj', new \stdClass());
 
         $r = Utilities::createClass('someObj', $sm);
@@ -72,7 +74,7 @@ class UtilitiesTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Tests Utilities::createClass()
-     * @expectedException OAuth2Provider\Exception\ClassNotExistException
+     * @expectedException \OAuth2Provider\Exception\ClassNotExistException
      */
     public function testCreateClassReturnsException()
     {
@@ -103,9 +105,10 @@ class UtilitiesTest extends \PHPUnit_Framework_TestCase
      */
     public function testStorageLookupWhereSubjectInExistingContainer()
     {
-        $sm = Bootstrap::getServiceManager()->setAllowOverride(true);
+        $sm = new ServiceManager();
 
         // seed the container
+        $sm->setService('OAuth2Provider/Containers/StorageContainer', new StorageContainer());
         $container = $sm->get('OAuth2Provider/Containers/StorageContainer');
         $container['serverKey']['user_credentials'] = new \stdClass();
 
@@ -118,9 +121,10 @@ class UtilitiesTest extends \PHPUnit_Framework_TestCase
      */
     public function testStorageLookupWhereSubjectInDefaultIdentifier()
     {
-        $sm = Bootstrap::getServiceManager()->setAllowOverride(true);
+        $sm = new ServiceManager();
 
         // seed the container
+        $sm->setService('OAuth2Provider/Containers/StorageContainer', new StorageContainer());
         $container = $sm->get('OAuth2Provider/Containers/StorageContainer');
         $container['serverKey']['user_credentials'] = new \stdClass();
 
@@ -133,10 +137,11 @@ class UtilitiesTest extends \PHPUnit_Framework_TestCase
      */
     public function testStorageLookupWhereSubjectIsSMElement()
     {
-        $sm = Bootstrap::getServiceManager()->setAllowOverride(true);
+        $sm = new ServiceManager();
         $sm->setService('UserCredentials', new \stdClass());
 
         // seed the container
+        $sm->setService('OAuth2Provider/Containers/StorageContainer', new StorageContainer());
         $container = $sm->get('OAuth2Provider/Containers/StorageContainer');
         $container['serverKey']['access_token'] = new \stdClass();
 
@@ -149,10 +154,11 @@ class UtilitiesTest extends \PHPUnit_Framework_TestCase
      */
     public function testStorageLookupWhereSubjectIsAnObject()
     {
-        $sm = Bootstrap::getServiceManager()->setAllowOverride(true);
+        $sm = new ServiceManager();
         $sm->setService('UserCredentials', new \stdClass());
 
         // seed the container
+        $sm->setService('OAuth2Provider/Containers/StorageContainer', new StorageContainer());
         $container = $sm->get('OAuth2Provider/Containers/StorageContainer');
         $container['serverKey']['access_token'] = new \stdClass();
 
@@ -165,10 +171,11 @@ class UtilitiesTest extends \PHPUnit_Framework_TestCase
      */
     public function testStorageLookupReturnsDefault()
     {
-        $sm = Bootstrap::getServiceManager()->setAllowOverride(true);
+        $sm = new ServiceManager();
         $sm->setService('UserCredentials', new \stdClass());
 
         // seed the container
+        $sm->setService('OAuth2Provider/Containers/StorageContainer', new StorageContainer());
         $container = $sm->get('OAuth2Provider/Containers/StorageContainer');
         $container['serverKey']['access_token'] = new \stdClass();
 

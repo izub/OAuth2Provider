@@ -33,7 +33,7 @@ class RequestContainerTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Tests RequestContainer->getServerContentsFromKey()
-     * @expectedException OAuth2Provider\Exception\ErrorException
+     * @expectedException \OAuth2Provider\Exception\ErrorException
      */
     public function testGetServerContentsFromKey()
     {

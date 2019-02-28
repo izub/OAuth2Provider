@@ -1,7 +1,11 @@
 <?php
 namespace OAuth2ProviderTests;
 
+use OAuth2Provider\Containers\GrantTypeContainer;
+use OAuth2Provider\Options\Configuration;
+use OAuth2Provider\Server;
 use OAuth2Provider\Service\AbstractFactory\ContainerAbstractFactory;
+use Zend\ServiceManager\ServiceManager;
 
 /**
  * ContainerAbstractFactory test case.
@@ -38,7 +42,7 @@ class ContainerAbstractFactoryTest extends \PHPUnit_Framework_TestCase
      */
     public function testCanCreateServiceWithNameReturnsFalseOnNonMatches()
     {
-        $sm = Bootstrap::getServiceManager()->setAllowOverride(true);
+        $sm = new ServiceManager();
         $r = $this->ContainerAbstractFactory->canCreateServiceWithName($sm, '', 'non-ouath');
 
         $this->assertFalse($r);
@@ -49,7 +53,7 @@ class ContainerAbstractFactoryTest extends \PHPUnit_Framework_TestCase
      */
     public function testCanCreateServiceWithNameReturnsFalseOnInvalidReges()
     {
-        $sm = Bootstrap::getServiceManager()->setAllowOverride(true);
+        $sm = new ServiceManager();
         $r = $this->ContainerAbstractFactory->canCreateServiceWithName($sm, '', 'oauth2provider.server.---');
 
         $this->assertFalse($r);
@@ -61,9 +65,11 @@ class ContainerAbstractFactoryTest extends \PHPUnit_Framework_TestCase
      */
     public function testCanCreateServiceWithKeyAsMainAndHasNoSMInstance()
     {
-        $sm = Bootstrap::getServiceManager()->setAllowOverride(true);
+        $sm = new ServiceManager();
         $serverKey = uniqid();
 
+        $sm->setService('OAuth2Provider/Options/Configuration', new Configuration());
+        $sm->setService('OAuth2Provider/Containers/GrantTypeContainer', new GrantTypeContainer());
         $container = $sm->get('OAuth2Provider/Containers/GrantTypeContainer');
         $container[$serverKey]['grant_type'] = new \stdClass();
 
@@ -80,11 +86,12 @@ class ContainerAbstractFactoryTest extends \PHPUnit_Framework_TestCase
      */
     public function testCanCreateServiceWithContainerKeyAndHasNoSMInstance()
     {
-        $sm = Bootstrap::getServiceManager()->setAllowOverride(true);
+        $sm = new ServiceManager();
         $serverKey = uniqid();
 
         $sm->setService("oauth2provider.server.{$serverKey}", new \stdClass());
 
+        $sm->setService('OAuth2Provider/Containers/GrantTypeContainer', new GrantTypeContainer());
         $container = $sm->get('OAuth2Provider/Containers/GrantTypeContainer');
         $container[$serverKey]['user_credentials'] = new \stdClass();
 
@@ -101,15 +108,18 @@ class ContainerAbstractFactoryTest extends \PHPUnit_Framework_TestCase
      */
     public function testCanCreateServiceWithContainerKeyAndHasSMInstance()
     {
-        $sm = Bootstrap::getServiceManager()->setAllowOverride(true);
+        $sm = new ServiceManager();
         $serverKey = uniqid();
 
+        $sm->setService('OAuth2Provider/Options/Configuration', new Configuration());
         $sm->get('OAuth2Provider/Options/Configuration')->setServers(array(
             $serverKey => array(),
         ));
 
+        $sm->setService("oauth2provider.server.{$serverKey}", new \stdClass());
+        $sm->setService('OAuth2Provider/Containers/GrantTypeContainer', new GrantTypeContainer());
         $container = $sm->get('OAuth2Provider/Containers/GrantTypeContainer');
-        $container[$serverKey]['user_credentials'] = new Assets\GrantTypeCustomUserCredentials();
+        $container[$serverKey]['user_credentials'] = new \OAuth2ProviderTests\Assets\GrantTypeCustomUserCredentials();
 
         $r = $this->ContainerAbstractFactory->canCreateServiceWithName(
             $sm, '', "oauth2provider.server.{$serverKey}.grant_type.user_credentials"
@@ -124,11 +134,12 @@ class ContainerAbstractFactoryTest extends \PHPUnit_Framework_TestCase
      */
     public function testCanCreateServiceWithContainerKeyHasNoSMInstanceAndInvalidContainerKey()
     {
-        $sm = Bootstrap::getServiceManager()->setAllowOverride(true);
+        $sm = new ServiceManager();
         $serverKey = uniqid();
 
         $sm->setService("oauth2provider.server.{$serverKey}", new \stdClass());
 
+        $sm->setService('OAuth2Provider/Containers/GrantTypeContainer', new GrantTypeContainer());
         $container = $sm->get('OAuth2Provider/Containers/GrantTypeContainer');
         $container[$serverKey]['user_credentials'] = new \stdClass();
 
@@ -145,7 +156,7 @@ class ContainerAbstractFactoryTest extends \PHPUnit_Framework_TestCase
      */
     public function testCanCreateServiceWithInvalidContainerKey()
     {
-        $sm = Bootstrap::getServiceManager()->setAllowOverride(true);
+        $sm = new ServiceManager();
         $serverKey = uniqid();
 
         $sm->setService("oauth2provider.server.{$serverKey}", new \stdClass());
@@ -163,11 +174,12 @@ class ContainerAbstractFactoryTest extends \PHPUnit_Framework_TestCase
      */
     public function testCreateServiceWithName()
     {
-        $sm = Bootstrap::getServiceManager()->setAllowOverride(true);
+        $sm = new ServiceManager();
         $serverKey = uniqid();
 
         $sm->setService("oauth2provider.server.{$serverKey}", new \stdClass());
 
+        $sm->setService('OAuth2Provider/Containers/GrantTypeContainer', new GrantTypeContainer());
         $container = $sm->get('OAuth2Provider/Containers/GrantTypeContainer');
         $container[$serverKey]['user_credentials'] = new \stdClass();
 

@@ -1,8 +1,11 @@
 <?php
 namespace OAuth2ProviderTests;
 
+use OAuth2Provider\Options\Configuration;
+use OAuth2Provider\Server;
 use OAuth2Provider\Service\Factory\MainServerFactory;
 
+use Zend\ServiceManager\ServiceManager;
 use Zend\Stdlib\ArrayUtils;
 
 /**
@@ -40,22 +43,21 @@ class MainServerFactoryTest extends \PHPUnit_Framework_TestCase
     public function testCreateService()
     {
         $oauthconfig = array(
-            'oauth2provider' => array(
-                'servers' => array(
-                    'default' => array(
-                        'storages' => array(
-                            'user_credentials' => new Assets\StorageUserCredentials(),
-                        ),
-                        'grant_types' => array(
-                            'user_credentials'
-                        ),
+            'servers' => array(
+                'default' => array(
+                    'storages' => array(
+                        'user_credentials' => new \OAuth2ProviderTests\Assets\StorageUserCredentials(),
+                    ),
+                    'grant_types' => array(
+                        'user_credentials'
                     ),
                 ),
             ),
         );
 
-        $mainSm = Bootstrap::getServiceManager(true)->setAllowOverride(true);
-        $mainSm->setService('Config', $oauthconfig);
+        $mainSm = new ServiceManager();
+        $mainSm->setService('OAuth2Provider/Options/Configuration', new Configuration($oauthconfig));
+        $mainSm->setService('oauth2provider.server.default', new Server());
 
         $r = $this->MainServerFactory->createService($mainSm);
         $this->assertInstanceOf('OAuth2Provider\Server', $r);

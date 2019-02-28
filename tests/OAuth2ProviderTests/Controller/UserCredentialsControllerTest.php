@@ -1,33 +1,59 @@
 <?php
 namespace OAuth2ProviderTests;
 
+use OAuth2\Response as OAuth2Response;
 use OAuth2Provider\Controller\UserCredentialsController;
 use OAuth2Provider\Version;
-
-use OAuth2\Response as OAuth2Response;
-
-use Zend\Http\Headers;
+use PHPUnit\Framework\TestCase;
+use Zend\Http\Request;
 use Zend\Json\Json;
-use Zend\Test\PHPUnit\Controller\AbstractHttpControllerTestCase;
-use Zend\Stdlib\ArrayUtils;
+use Zend\Mvc\MvcEvent;
+use Zend\Mvc\Router\Http\RouteMatch;
+use Zend\ServiceManager\ServiceLocatorInterface;
+use Zend\ServiceManager\ServiceManager;
+use Zend\View\Model\JsonModel;
 
 /**
  * UserCredentialsController test case.
  */
-class UserCredentialsControllerTest extends AbstractHttpControllerTestCase
+class UserCredentialsControllerTest extends TestCase
 {
     /**
      * @var UserCredentialsController
      */
     private $UserCredentialsController;
+    /**
+     * @var Request
+     */
+    private $request;
+    /**
+     * @var RouteMatch
+     */
+    private $routeMatch;
+    /**
+     * @var MvcEvent
+     */
+    private $event;
+    /**
+     * @var ServiceManager
+     */
+    private $serviceManager;
 
     /**
      * Prepares the environment before running a test.
      */
     protected function setUp()
     {
-        parent::setUp();
-        $this->setApplicationConfig(Bootstrap::getServiceManager()->get('ApplicationConfig'));
+        $this->UserCredentialsController = new UserCredentialsController();
+        $this->serviceManager = new ServiceManager();
+        $this->serviceManager->setAlias('oauth2provider.server.main', 'oauth2provider.server.default');
+        $this->UserCredentialsController->setServiceLocator($this->serviceManager);
+
+        $this->request = new Request();
+        $this->routeMatch = new RouteMatch(['controller' => UserCredentialsController::class]);
+        $this->event = new MvcEvent();
+        $this->event->setRouteMatch($this->routeMatch);
+        $this->UserCredentialsController->setEvent($this->event);
     }
 
     /**
@@ -36,7 +62,6 @@ class UserCredentialsControllerTest extends AbstractHttpControllerTestCase
     protected function tearDown()
     {
         $this->UserCredentialsController = null;
-        parent::tearDown();
     }
 
     /**
@@ -45,10 +70,11 @@ class UserCredentialsControllerTest extends AbstractHttpControllerTestCase
      */
     public function testAuthorizeAction()
     {
-        $this->dispatch('/oauth2/' . Version::API_VERSION . '/authorize', 'POST');
+        $this->routeMatch->setParam('action', 'authorize');
+        /** @var JsonModel $response */
+        $response = $this->UserCredentialsController->dispatch($this->request);
 
-        $r = Json::decode($this->getResponse()->getContent(), Json::TYPE_ARRAY);
-        $this->assertNotEmpty($r['error']);
+        $this->assertNotEmpty($response->getVariable('error'));
     }
 
     /**
@@ -73,14 +99,14 @@ class UserCredentialsControllerTest extends AbstractHttpControllerTestCase
             ->method('handleTokenRequest')
             ->will($this->returnValue(new OAuth2Response($result)));
 
-        $mainSm = $this->getApplicationServiceLocator()->setAllowOverride(true);
         // having set to server.default provides some sort if integration test
-        $mainSm->setService('oauth2provider.server.default', $serverMock);
+        $this->serviceManager->setService('oauth2provider.server.default', $serverMock);
 
-        $this->dispatch('/oauth2/' . Version::API_VERSION . '/request', 'POST');
+        $this->routeMatch->setParam('action', 'request');
 
-        $r = Json::decode($this->getResponse()->getContent(), Json::TYPE_ARRAY);
-        $this->assertSame($result, $r);
+        /** @var JsonModel $response */
+        $response = $this->UserCredentialsController->dispatch($this->request);
+        $this->assertSame($result, $response->getVariables());
     }
 
     /**
@@ -102,14 +128,14 @@ class UserCredentialsControllerTest extends AbstractHttpControllerTestCase
                 'success' => true
             ))));
 
-        $mainSm = $this->getApplicationServiceLocator()->setAllowOverride(true);
         // having set to server.default provides some sort if integration test
-        $mainSm->setService('oauth2provider.server.default', $serverMock);
+        $this->serviceManager->setService('oauth2provider.server.default', $serverMock);
+        $this->routeMatch->setParam('action', 'resource');
 
-        $this->dispatch('/oauth2/' . Version::API_VERSION . '/resource', 'POST');
+        /** @var JsonModel $response */
+        $response = $this->UserCredentialsController->dispatch($this->request);
 
-        $r = Json::decode($this->getResponse()->getContent(), Json::TYPE_ARRAY);
-        $this->assertEquals('Access Token is Valid!', $r['message']);
+        $this->assertEquals('Access Token is Valid!', $response->getVariable('message'));
     }
 
     /**
@@ -132,15 +158,15 @@ class UserCredentialsControllerTest extends AbstractHttpControllerTestCase
                 'error_description' => 'some message',
             ))));
 
-        $mainSm = $this->getApplicationServiceLocator()->setAllowOverride(true);
-        $mainSm->setService('oauth2provider.server.default', $serverMock);
+        $this->serviceManager->setService('oauth2provider.server.default', $serverMock);
 
-        $this->dispatch('/oauth2/' . Version::API_VERSION . '/resource', 'POST');
+        $this->routeMatch->setParam('action', 'resource');
 
-        $r = Json::decode($this->getResponse()->getContent(), Json::TYPE_ARRAY);
-        $this->assertFalse($r['success']);
-        $this->assertEquals('some error', $r['error']);
-        $this->assertEquals('some message', $r['message']);
+        /** @var JsonModel $response */
+        $response = $this->UserCredentialsController->dispatch($this->request);
+        $this->assertFalse($response->getVariable('success'));
+        $this->assertEquals('some error', $response->getVariable('error'));
+        $this->assertEquals('some message', $response->getVariable('message'));
     }
 
     /**
@@ -162,14 +188,14 @@ class UserCredentialsControllerTest extends AbstractHttpControllerTestCase
                 'nonexistingkeyplaceholder'   => 'zXxXz',
             ))));
 
-        $mainSm = $this->getApplicationServiceLocator()->setAllowOverride(true);
-        $mainSm->setService('oauth2provider.server.default', $serverMock);
+        $this->serviceManager->setService('oauth2provider.server.default', $serverMock);
 
-        $this->dispatch('/oauth2/' . Version::API_VERSION . '/resource', 'POST');
+        $this->routeMatch->setParam('action', 'resource');
 
-        $r = Json::decode($this->getResponse()->getContent(), Json::TYPE_ARRAY);
-        $this->assertFalse($r['success']);
-        $this->assertEquals('Invalid Request', $r['error']);
-        $this->assertEquals('Access Token is invalid', $r['message']);
+        /** @var JsonModel $response */
+        $response = $this->UserCredentialsController->dispatch($this->request);
+        $this->assertFalse($response->getVariable('success'));
+        $this->assertEquals('Invalid Request', $response->getVariable('error'));
+        $this->assertEquals('Access Token is invalid', $response->getVariable('message'));
     }
 }

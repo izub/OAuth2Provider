@@ -1,7 +1,11 @@
 <?php
 namespace OAuth2ProviderTests;
 
+use OAuth2Provider\Containers\RequestContainer;
+use OAuth2Provider\Containers\ResponseContainer;
+use OAuth2Provider\Options\Configuration;
 use OAuth2Provider\Service\AbstractFactory\RequestAbstractFactory;
+use Zend\ServiceManager\ServiceManager;
 
 /**
  * RequestAbstractFactory test case.
@@ -39,7 +43,7 @@ class RequestAbstractFactoryTest extends \PHPUnit_Framework_TestCase
      */
     public function testCanCreateServiceWithNameReturnsFalseOnMalformedRname()
     {
-        $sm = Bootstrap::getServiceManager()->setAllowOverride(true);
+        $sm = new ServiceManager();
         $r = $this->RequestAbstractFactory->canCreateServiceWithName($sm, '', 'ouath2provide.xxx');
         $this->assertFalse($r);
     }
@@ -50,10 +54,11 @@ class RequestAbstractFactoryTest extends \PHPUnit_Framework_TestCase
      */
     public function testCanCreateServiceWithNameUsingMainAndExistingSMInstance()
     {
-        $sm = Bootstrap::getServiceManager()->setAllowOverride(true);
+        $sm = new ServiceManager();
         $serverKey = uniqid();
 
         $sm->setService("oauth2provider.server.{$serverKey}", new \stdClass());
+        $sm->setService('OAuth2Provider/Options/Configuration', new Configuration());
         $sm->get('OAuth2Provider/Options/Configuration')->setMainServer($serverKey);
 
         $r = $this->RequestAbstractFactory->canCreateServiceWithName($sm, '', "oauth2provider.server.{$serverKey}.request");
@@ -62,13 +67,14 @@ class RequestAbstractFactoryTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Tests RequestAbstractFactory->canCreateServiceWithName()
-     * @expectedException OAuth2Provider\Exception\ErrorException
+     * @expectedException \OAuth2Provider\Exception\ErrorException
      */
     public function testCanCreateServiceWithNameReturnsException()
     {
-        $sm = Bootstrap::getServiceManager()->setAllowOverride(true);
+        $sm = new ServiceManager();
         $serverKey = uniqid();
 
+        $sm->setService('OAuth2Provider/Options/Configuration', new Configuration());
         $sm->get('OAuth2Provider/Options/Configuration')->setMainServer($serverKey);
 
         $r = $this->RequestAbstractFactory->canCreateServiceWithName($sm, '', "oauth2provider.server.{$serverKey}.request");
@@ -79,9 +85,10 @@ class RequestAbstractFactoryTest extends \PHPUnit_Framework_TestCase
      */
     public function testCanCreateServiceReturnsFalseOnMalformedInvalidRequestName()
     {
-        $sm = Bootstrap::getServiceManager()->setAllowOverride(true);
+        $sm = new ServiceManager();
         $serverKey = "*&*";
 
+        $sm->setService('OAuth2Provider/Options/Configuration', new Configuration());
         $sm->get('OAuth2Provider/Options/Configuration')->setMainServer($serverKey);
 
         $r = $this->RequestAbstractFactory->canCreateServiceWithName($sm, '', "oauth2provider.server.{$serverKey}.request");
@@ -93,10 +100,12 @@ class RequestAbstractFactoryTest extends \PHPUnit_Framework_TestCase
      */
     public function testCreateServiceWithName()
     {
-        $sm = Bootstrap::getServiceManager()->setAllowOverride(true);
+        $sm = new ServiceManager();
         $serverKey = uniqid();
 
         $sm->setService("oauth2provider.server.{$serverKey}", new \stdClass());
+        $sm->setService('OAuth2Provider/Options/Configuration', new Configuration());
+        $sm->setService('OAuth2Provider/Containers/RequestContainer', new RequestContainer());
         $sm->get('OAuth2Provider/Options/Configuration')->setMainServer($serverKey);
 
         // execute

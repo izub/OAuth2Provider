@@ -158,7 +158,7 @@ class ServerConfigurationsTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetTokenType()
     {
-        $tokenMock = $this->getMock('OAuth2\TokenType\TokenTypeInterface');
+        $tokenMock = $this->createMock('OAuth2\TokenType\TokenTypeInterface');
         $this->ServerConfigurations->setTokenType($tokenMock);
         $r = $this->ServerConfigurations->getTokenType();
         $this->assertInstanceOf('OAuth2\TokenType\TokenTypeInterface', $r);
@@ -178,7 +178,7 @@ class ServerConfigurationsTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetScopeUtil()
     {
-        $stub = $this->getMock('OAuth2\Scope');
+        $stub = $this->createMock('OAuth2\Scope');
         $this->ServerConfigurations->setScopeUtil($stub);
         $r = $this->ServerConfigurations->getScopeUtil();
         $this->assertInstanceOf('OAuth2\Scope', $r);
@@ -198,7 +198,7 @@ class ServerConfigurationsTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetClientAssertionType()
     {
-        $stub = $this->getMock('OAuth2\ClientAssertionType\ClientAssertionTypeInterface');
+        $stub = $this->createMock('OAuth2\ClientAssertionType\ClientAssertionTypeInterface');
         $this->ServerConfigurations->setClientAssertionType($stub);
         $r = $this->ServerConfigurations->getClientAssertionType();
         $this->assertInstanceOf('OAuth2\ClientAssertionType\ClientAssertionTypeInterface', $r);

@@ -33,7 +33,7 @@ class ResponseContainerTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Tests ResponseContainer->getServerContentsFromKey()
-     * @expectedException OAuth2Provider\Exception\ErrorException
+     * @expectedException \OAuth2Provider\Exception\ErrorException
      */
     public function testGetServerContentsFromKey()
     {

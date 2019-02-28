@@ -1,7 +1,10 @@
 <?php
 namespace OAuth2ProviderTests;
 
+use OAuth2Provider\Containers\StorageContainer;
+use OAuth2Provider\Options\ResponseType\AccessTokenConfigurations;
 use OAuth2Provider\Service\Factory\ResponseTypeStrategy\AccessTokenFactory;
+use Zend\ServiceManager\ServiceManager;
 
 /**
  * AccessTokenFactory test case.
@@ -38,12 +41,14 @@ class AccessTokenFactoryTest extends \PHPUnit_Framework_TestCase
      */
     public function testCreateService()
     {
-        $mainSm = Bootstrap::getServiceManager()->setAllowOverride(true);
+        $mainSm = new ServiceManager();
 
         // seed the storage
-        $storageCont = $mainSm->get('OAuth2Provider/Containers/StorageContainer');
-        $storageCont['server1']['access_token'] = new Assets\Storage\AccessTokenStorage();
-        $storageCont['server1']['refresh_token'] = new Assets\Storage\RefreshTokenStorage();
+        $storageCont = new StorageContainer();
+        $storageCont['server1']['access_token'] = new \OAuth2ProviderTests\Assets\Storage\AccessTokenStorage();
+        $storageCont['server1']['refresh_token'] = new \OAuth2ProviderTests\Assets\Storage\RefreshTokenStorage();
+        $mainSm->setService('OAuth2Provider/Containers/StorageContainer', $storageCont);
+        $mainSm->setService('OAuth2Provider/Options/ResponseType/AccessToken', new AccessTokenConfigurations());
 
         $classname = 'OAuth2\ResponseType\AccessToken';
         $options = array('token_storage' => '', 'refresh_storage' => '');
@@ -57,12 +62,14 @@ class AccessTokenFactoryTest extends \PHPUnit_Framework_TestCase
      */
     public function testCreateServiceDoesNotHaveOptionalRefreshTokenStorage()
     {
-        $mainSm = Bootstrap::getServiceManager()->setAllowOverride(true);
+        $mainSm = new ServiceManager();
 
         // seed the storage
-        $storageCont = $mainSm->get('OAuth2Provider/Containers/StorageContainer');
-        $storageCont['server1']['access_token'] = new Assets\Storage\AccessTokenStorage();
+        $storageCont = new StorageContainer();
+        $storageCont['server1']['access_token'] = new \OAuth2ProviderTests\Assets\Storage\AccessTokenStorage();
         $storageCont['server1']['refresh_token'] = null;
+        $mainSm->setService('OAuth2Provider/Containers/StorageContainer', $storageCont);
+        $mainSm->setService('OAuth2Provider/Options/ResponseType/AccessToken', new AccessTokenConfigurations());
 
         $classname = 'OAuth2\ResponseType\AccessToken';
         $options = array('token_storage' => '', 'refresh_storage' => '');
@@ -73,15 +80,17 @@ class AccessTokenFactoryTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Tests AccessTokenFactory->createService()
-     * @expectedException OAuth2Provider\Exception\InvalidServerException
+     * @expectedException \OAuth2Provider\Exception\InvalidServerException
      */
     public function testCreateServiceReturnsException()
     {
-        $mainSm = Bootstrap::getServiceManager()->setAllowOverride(true);
+        $mainSm = new ServiceManager();
 
         // seed the storage
-        $storageCont = $mainSm->get('OAuth2Provider/Containers/StorageContainer');
+        $storageCont = new StorageContainer();
         $storageCont['server1']['access_token'] = null;
+        $mainSm->setService('OAuth2Provider/Containers/StorageContainer', $storageCont);
+        $mainSm->setService('OAuth2Provider/Options/ResponseType/AccessToken', new AccessTokenConfigurations());
 
         $classname = 'OAuth2\ResponseType\AccessToken';
         $options = array('token_storage' => '', 'refresh_storage' => '');

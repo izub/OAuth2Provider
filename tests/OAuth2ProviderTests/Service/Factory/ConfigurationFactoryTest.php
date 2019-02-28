@@ -2,6 +2,7 @@
 namespace OAuth2ProviderTests;
 
 use OAuth2Provider\Service\Factory\ConfigurationFactory;
+use Zend\ServiceManager\ServiceManager;
 
 /**
  * ConfigurationFactory test case.
@@ -44,7 +45,7 @@ class ConfigurationFactoryTest extends \PHPUnit_Framework_TestCase
             ),
         );
 
-        $mainSm = Bootstrap::getServiceManager()->setAllowOverride(true);
+        $mainSm = new ServiceManager();
         $mainSm->setService('Config', $config);
 
         $configOption = $this->ConfigurationFactory->createService($mainSm);
@@ -64,7 +65,7 @@ class ConfigurationFactoryTest extends \PHPUnit_Framework_TestCase
             ),
         );
 
-        $mainSm = Bootstrap::getServiceManager()->setAllowOverride(true);
+        $mainSm = new ServiceManager();
         $mainSm->setService('Config', $config);
 
         $configOption = $this->ConfigurationFactory->createService($mainSm);
@@ -73,13 +74,13 @@ class ConfigurationFactoryTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Tests ConfigurationFactory->createService()
-     * @expectedException OAuth2Provider\Exception\InvalidConfigException
+     * @expectedException \OAuth2Provider\Exception\InvalidConfigException
      */
     public function testCreateServiceReturnsException()
     {
         $config = array(); //empty array
 
-        $mainSm = Bootstrap::getServiceManager()->setAllowOverride(true);
+        $mainSm = new ServiceManager();
         $mainSm->setService('Config', $config);
 
         $configOption = $this->ConfigurationFactory->createService($mainSm);

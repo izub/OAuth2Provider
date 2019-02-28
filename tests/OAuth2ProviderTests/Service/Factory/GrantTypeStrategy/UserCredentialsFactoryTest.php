@@ -1,7 +1,11 @@
 <?php
 namespace OAuth2ProviderTests;
 
+use OAuth2Provider\Containers\StorageContainer;
+use OAuth2Provider\Options\GrantType\UserCredentialsConfigurations;
+use OAuth2Provider\Options\ResponseType\AccessTokenConfigurations;
 use OAuth2Provider\Service\Factory\GrantTypeStrategy\UserCredentialsFactory;
+use Zend\ServiceManager\ServiceManager;
 
 /**
  * UserCredentialsFactory test case.
@@ -36,11 +40,13 @@ class UserCredentialsFactoryTest extends \PHPUnit_Framework_TestCase
 	 */
     public function testCreateService()
     {
-        $mainSm = Bootstrap::getServiceManager()->setAllowOverride(true);
+        $mainSm = new ServiceManager();
 
         // seed the storage
-        $storageCont = $mainSm->get('OAuth2Provider/Containers/StorageContainer');
-        $storageCont['server1']['user_credentials'] = new Assets\Storage\UserCredentialsStorage();
+        $storageCont = new StorageContainer();
+        $storageCont['server1']['user_credentials'] = new \OAuth2ProviderTests\Assets\Storage\UserCredentialsStorage();
+        $mainSm->setService('OAuth2Provider/Containers/StorageContainer', $storageCont);
+        $mainSm->setService('OAuth2Provider/Options/GrantType/UserCredentials', new UserCredentialsConfigurations());
 
         $classname = 'OAuth2ProviderTests\Assets\GrantTypeCustomUserCredentials';
         $options = array('storage' => 'user_credentials');
@@ -50,15 +56,17 @@ class UserCredentialsFactoryTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException OAuth2Provider\Exception\InvalidServerException
+     * @expectedException \OAuth2Provider\Exception\InvalidServerException
      */
     public function testCreateServiceReturnsException()
     {
-        $mainSm = Bootstrap::getServiceManager()->setAllowOverride(true);
+        $mainSm = new ServiceManager();
 
         // seed the storage
-        $storageCont = $mainSm->get('OAuth2Provider/Containers/StorageContainer');
+        $storageCont = new StorageContainer();
         $storageCont['server1']['user_credentials'] = '';
+        $mainSm->setService('OAuth2Provider/Containers/StorageContainer', $storageCont);
+        $mainSm->setService('OAuth2Provider/Options/GrantType/UserCredentials', new UserCredentialsConfigurations());
 
         $classname = 'OAuth2ProviderTests\Assets\GrantTypeCustomUserCredentials';
         $options = array('storage' => 'user_credentials');

@@ -1,7 +1,11 @@
 <?php
 namespace OAuth2ProviderTests;
 
+use OAuth2Provider\Containers\StorageContainer;
+use OAuth2Provider\Options\GrantType\AuthorizationCodeConfigurations;
+use OAuth2Provider\Options\GrantType\RefreshTokenConfigurations;
 use OAuth2Provider\Service\Factory\GrantTypeStrategy\AuthorizationCodeFactory;
+use Zend\ServiceManager\ServiceManager;
 
 /**
  * AuthorizationCodeFactory test case.
@@ -38,10 +42,13 @@ class AuthorizationCodeFactoryTypeTest extends \PHPUnit_Framework_TestCase
      */
     public function testCreateService()
     {
-        $mainSm = Bootstrap::getServiceManager()->setAllowOverride(true);
+        $mainSm = new ServiceManager();
+        $storageCont = new StorageContainer();
         $options = array(
-            'authorization_code_storage' => new Assets\Storage\AuthorizationCodeStorage(),
+            'authorization_code_storage' => new \OAuth2ProviderTests\Assets\Storage\AuthorizationCodeStorage(),
         );
+        $mainSm->setService('OAuth2Provider/Containers/StorageContainer', $storageCont);
+        $mainSm->setService('OAuth2Provider/Options/GrantType/AuthorizationCode', new AuthorizationCodeConfigurations());
 
         $r = $this->AuthorizationCodeFactory->createService($mainSm);
         $r = $r('OAuth2\GrantType\AuthorizationCode', $options, 'server4');
@@ -50,14 +57,18 @@ class AuthorizationCodeFactoryTypeTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Tests AuthorizationCodeFactory->createService()
-     * @expectedException OAuth2Provider\Exception\InvalidServerException
+     * @expectedException \OAuth2Provider\Exception\InvalidServerException
      */
     public function testCreateServiceReturnsException()
     {
-        $mainSm = Bootstrap::getServiceManager()->setAllowOverride(true);
+        $mainSm = new ServiceManager();
+
+        $storageCont = new StorageContainer();
         $options = array(
             'authorization_code_storage' => 'xxXXxx',
         );
+        $mainSm->setService('OAuth2Provider/Containers/StorageContainer', $storageCont);
+        $mainSm->setService('OAuth2Provider/Options/GrantType/AuthorizationCode', new AuthorizationCodeConfigurations());
 
         $r = $this->AuthorizationCodeFactory->createService($mainSm);
         $r = $r('OAuth2\GrantType\AuthorizationCode', $options, 'server4');

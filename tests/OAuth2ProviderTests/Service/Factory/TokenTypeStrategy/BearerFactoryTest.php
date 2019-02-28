@@ -1,7 +1,9 @@
 <?php
 namespace OAuth2ProviderTests;
 
+use OAuth2Provider\Options\TokenType\BearerConfigurations;
 use OAuth2Provider\Service\Factory\TokenTypeStrategy\BearerFactory;
+use Zend\ServiceManager\ServiceManager;
 
 /**
  * BearerFactory test case.
@@ -36,7 +38,8 @@ class BearerFactoryTest extends \PHPUnit_Framework_TestCase
      */
     public function testCreateService()
     {
-        $mainSm = Bootstrap::getServiceManager();
+        $mainSm = new ServiceManager();
+        $mainSm->setService('OAuth2Provider/Options/TokenType/Bearer', new BearerConfigurations());
 
         $config = array(
             'configs' => array(
@@ -51,11 +54,12 @@ class BearerFactoryTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Tests BearerFactory->createService()
-     * @expectedException OAuth2Provider\Exception\InvalidServerException
+     * @expectedException \OAuth2Provider\Exception\InvalidServerException
      */
     public function testCreateServiceReturnsException()
     {
-        $mainSm = Bootstrap::getServiceManager();
+        $mainSm = new ServiceManager();
+        $mainSm->setService('OAuth2Provider/Options/TokenType/Bearer', new BearerConfigurations());
 
         $config = array(
             'configs' => array(

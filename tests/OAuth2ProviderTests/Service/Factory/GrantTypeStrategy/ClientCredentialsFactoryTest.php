@@ -1,7 +1,11 @@
 <?php
 namespace OAuth2ProviderTests;
 
+use OAuth2Provider\Containers\StorageContainer;
+use OAuth2Provider\Options\GrantType\ClientCredentialsConfigurations;
+use OAuth2Provider\Options\GrantType\RefreshTokenConfigurations;
 use OAuth2Provider\Service\Factory\GrantTypeStrategy\ClientCredentialsFactory;
+use Zend\ServiceManager\ServiceManager;
 
 /**
  * ClientCredentialsFactory test case.
@@ -38,11 +42,15 @@ class ClientCredentialsFactoryTest extends \PHPUnit_Framework_TestCase
      */
     public function testCreateService()
     {
-        $mainSm = Bootstrap::getServiceManager()->setAllowOverride(true);
+        $mainSm = new ServiceManager();
+        $storageCont = new StorageContainer();
         $options = array(
-            'client_credentials_storage' => new Assets\Storage\ClientCredentialsStorage(),
+            'client_credentials_storage' => new \OAuth2ProviderTests\Assets\Storage\ClientCredentialsStorage(),
             'configs' => array(),
         );
+        $mainSm->setService('OAuth2Provider/Containers/StorageContainer', $storageCont);
+        $mainSm->setService('OAuth2Provider/Options/GrantType/ClientCredentials', new ClientCredentialsConfigurations());
+
 
         $r = $this->ClientCredentialsFactory->createService($mainSm);
         $r = $r('OAuth2\GrantType\ClientCredentials', $options, 'server3');
@@ -51,14 +59,18 @@ class ClientCredentialsFactoryTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Tests ClientCredentialsFactory->createService()
-     * @expectedException OAuth2Provider\Exception\InvalidServerException
+     * @expectedException \OAuth2Provider\Exception\InvalidServerException
      */
     public function testCreateServiceReturnsException()
     {
-        $mainSm = Bootstrap::getServiceManager()->setAllowOverride(true);
+        $mainSm = new ServiceManager();
+        $storageCont = new StorageContainer();
         $options = array(
             'client_credentials_storage' => 'nothere',
         );
+        $mainSm->setService('OAuth2Provider/Containers/StorageContainer', $storageCont);
+        $mainSm->setService('OAuth2Provider/Options/GrantType/ClientCredentials', new ClientCredentialsConfigurations());
+
 
         $r = $this->ClientCredentialsFactory->createService($mainSm);
         $r('OAuth2\GrantType\ClientCredentials', $options, 'server3');

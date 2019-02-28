@@ -1,7 +1,11 @@
 <?php
 namespace OAuth2ProviderTests;
 
+use OAuth2\ClientAssertionType\HttpBasic;
+use OAuth2Provider\Containers\StorageContainer;
+use OAuth2Provider\Options\ClientAssertionType\HttpBasicConfigurations;
 use OAuth2Provider\Service\Factory\ClientAssertionTypeStrategy\HttpBasicFactory;
+use Zend\ServiceManager\ServiceManager;
 
 /**
  * HttpBasicFactory test case.
@@ -36,11 +40,14 @@ class HttpBasicFactoryTest extends \PHPUnit_Framework_TestCase
      */
     public function testCreateService()
     {
-        $sm = Bootstrap::getServiceManager()->setAllowOverride(true);
+        $sm = new ServiceManager();
+
+        $sm->setService('OAuth2Provider/Options/ClientAssertionType/HttpBasic', new HttpBasicConfigurations());
+        $sm->setService('OAuth2Provider/Containers/StorageContainer', new StorageContainer());
 
         $serverKey = uniqid();
         $options = array(
-            'client_credentials_storage' => new Assets\Storage\ClientCredentialsStorage(),
+            'client_credentials_storage' => new \OAuth2ProviderTests\Assets\Storage\ClientCredentialsStorage(),
             'configs' => array(
                 'allow_credentials_in_request_body' => false,
             )
@@ -54,12 +61,15 @@ class HttpBasicFactoryTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @group test2
-     * @expectedException OAuth2Provider\Exception\InvalidServerException
+     * @expectedException \OAuth2Provider\Exception\InvalidServerException
      */
     public function testCreateServiceReturnsException()
     {
         $serverKey = uniqid();
-        $sm = Bootstrap::getServiceManager()->setAllowOverride(true);
+        $sm = new ServiceManager();
+
+        $sm->setService('OAuth2Provider/Options/ClientAssertionType/HttpBasic', new HttpBasicConfigurations());
+        $sm->setService('OAuth2Provider/Containers/StorageContainer', new StorageContainer());
 
         $options = array(
             'configs' => array(

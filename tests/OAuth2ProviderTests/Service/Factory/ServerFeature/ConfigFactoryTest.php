@@ -1,7 +1,9 @@
 <?php
 namespace OAuth2ProviderTests;
 
+use OAuth2Provider\Containers\ConfigContainer;
 use OAuth2Provider\Service\Factory\ServerFeature\ConfigFactory;
+use Zend\ServiceManager\ServiceManager;
 
 /**
  * ConfigFactory test case.
@@ -34,7 +36,9 @@ class ConfigFactoryTest extends \PHPUnit_Framework_TestCase
      */
     public function testCreateService()
     {
-        $mainSm = Bootstrap::getServiceManager()->setAllowOverride(true);
+        $mainSm = new ServiceManager();
+
+        $mainSm->setService('OAuth2Provider/Containers/ConfigContainer', new ConfigContainer());
 
         // seed the container
         $configContainer = $mainSm->get('OAuth2Provider/Containers/ConfigContainer');

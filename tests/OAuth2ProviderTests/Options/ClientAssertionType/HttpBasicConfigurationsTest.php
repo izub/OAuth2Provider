@@ -45,7 +45,7 @@ class HttpBasicConfigurationsTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetClientCredentialsStorage()
     {
-        $s = $this->HttpBasicConfigurations->setClientCredentialsStorage(new Assets\Storage\ClientCredentialsStorage());
+        $s = $this->HttpBasicConfigurations->setClientCredentialsStorage(new \OAuth2ProviderTests\Assets\Storage\ClientCredentialsStorage());
         $this->assertSame($this->HttpBasicConfigurations, $s);
 
         $r = $this->HttpBasicConfigurations->getClientCredentialsStorage();

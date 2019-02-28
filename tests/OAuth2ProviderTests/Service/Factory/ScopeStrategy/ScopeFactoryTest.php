@@ -1,7 +1,11 @@
 <?php
 namespace OAuth2ProviderTests;
 
+use OAuth2\Scope;
+use OAuth2Provider\Containers\StorageContainer;
+use OAuth2Provider\Options\ScopeType\ScopeConfigurations;
 use OAuth2Provider\Service\Factory\ScopeStrategy\ScopeFactory;
+use Zend\ServiceManager\ServiceManager;
 
 /**
  * ScopeFactory test case.
@@ -39,10 +43,12 @@ class ScopeFactoryTest extends \PHPUnit_Framework_TestCase
     public function testCreateService()
     {
         $serverKey = uniqid();
-        $sm = Bootstrap::getServiceManager()->setAllowOverride(true);
+        $sm = new ServiceManager();
+        $sm->setService('OAuth2Provider/Options/ScopeType/Scope', new ScopeConfigurations());
+        $sm->setService('OAuth2Provider/Containers/StorageContainer', new StorageContainer());
 
         $storage = $sm->get('OAuth2Provider/Containers/StorageContainer');
-        $storage[$serverKey]['scope'] = new Assets\Storage\ScopeStorage();
+        $storage[$serverKey]['scope'] = new \OAuth2ProviderTests\Assets\Storage\ScopeStorage();
 
         $f = $this->ScopeFactory->createService($sm);
 
@@ -57,8 +63,9 @@ class ScopeFactoryTest extends \PHPUnit_Framework_TestCase
     public function testCreateServiceUsesUserDefinedScope()
     {
         $serverKey = uniqid();
-        $sm = Bootstrap::getServiceManager()->setAllowOverride(true);
-        $sm->setService('scope/storage', new Assets\Storage\ScopeStorage());
+        $sm = new ServiceManager();
+        $sm->setService('OAuth2Provider/Options/ScopeType/Scope', new ScopeConfigurations());
+        $sm->setService('OAuth2Provider/Containers/StorageContainer', new StorageContainer());
         $f = $this->ScopeFactory->createService($sm);
 
         $options = array(
@@ -73,7 +80,10 @@ class ScopeFactoryTest extends \PHPUnit_Framework_TestCase
     public function testCreateServiceIsManualDefined()
     {
         $serverKey = uniqid();
-        $sm = Bootstrap::getServiceManager()->setAllowOverride(true);
+        $sm = new ServiceManager();
+        $sm->setService('OAuth2Provider/Options/ScopeType/Scope', new ScopeConfigurations());
+        $sm->setService('OAuth2Provider/Containers/StorageContainer', new StorageContainer());
+
         $f = $this->ScopeFactory->createService($sm);
 
         $options = array(
@@ -88,15 +98,17 @@ class ScopeFactoryTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException OAuth2Provider\Exception\InvalidClassException
+     * @expectedException \OAuth2Provider\Exception\InvalidClassException
      */
     public function testCreateServiceReturnsException()
     {
         $serverKey = uniqid();
-        $sm = Bootstrap::getServiceManager()->setAllowOverride(true);
+        $sm = new ServiceManager();
 
-        $storage = $sm->get('OAuth2Provider/Containers/StorageContainer');
+        $storage = new StorageContainer();
         $storage[$serverKey]['scope'] = new Assets\Storage\AccessTokenStorage();
+        $sm->setService('OAuth2Provider/Options/ScopeType/Scope', new ScopeConfigurations());
+        $sm->setService('OAuth2Provider/Containers/StorageContainer', $storage);
 
         $f = $this->ScopeFactory->createService($sm);
 

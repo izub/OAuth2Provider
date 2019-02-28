@@ -1,7 +1,9 @@
 <?php
 namespace OAuth2ProviderTests;
 
+use OAuth2Provider\Containers\GrantTypeContainer;
 use OAuth2Provider\Service\Factory\ServerFeature\GrantTypeFactory;
+use Zend\ServiceManager\ServiceManager;
 
 /**
  * GrantTypeFactory test case.
@@ -35,12 +37,13 @@ class GrantTypeFactoryTest extends \PHPUnit_Framework_TestCase
      */
     public function testCreateService()
     {
-        $storage = new \OAuth2\GrantType\UserCredentials(new Assets\StorageUserCredentials());
+        $storage = new \OAuth2\GrantType\UserCredentials(new \OAuth2ProviderTests\Assets\StorageUserCredentials());
         $strategies = array(
             $storage,
         );
 
-        $mainSm = Bootstrap::getServiceManager()->setAllowOverride(true);
+        $mainSm = new ServiceManager();
+        $mainSm->setService('OAuth2Provider/Containers/GrantTypeContainer', new GrantTypeContainer());
         $r = $this->GrantTypeFactory->createService($mainSm);
         $this->assertSame(array('user_credentials' => $storage), $r($strategies, 'server1'));
     }

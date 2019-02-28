@@ -1,7 +1,10 @@
 <?php
 namespace OAuth2ProviderTests;
 
+use OAuth2Provider\Containers\StorageContainer;
+use OAuth2Provider\Options\ResponseType\AuthorizationCodeConfigurations;
 use OAuth2Provider\Service\Factory\ResponseTypeStrategy\AuthorizationCodeFactory;
+use Zend\ServiceManager\ServiceManager;
 
 /**
  * AuthorizationCodeFactory test case.
@@ -36,11 +39,13 @@ class AuthorizationCodeFactoryTest extends \PHPUnit_Framework_TestCase
      */
     public function testCreateService()
     {
-        $mainSm = Bootstrap::getServiceManager()->setAllowOverride(true);
+        $mainSm = new ServiceManager();
 
         // seed the storage
-        $storageCont = $mainSm->get('OAuth2Provider/Containers/StorageContainer');
-        $storageCont['server1']['authorization_code'] = new Assets\Storage\AuthorizationCodeStorage();
+        $storageCont = new StorageContainer();
+        $storageCont['server1']['authorization_code'] = new \OAuth2ProviderTests\Assets\Storage\AuthorizationCodeStorage();
+        $mainSm->setService('OAuth2Provider/Containers/StorageContainer', $storageCont);
+        $mainSm->setService('OAuth2Provider/Options/ResponseType/AuthorizationCode', new AuthorizationCodeConfigurations());
 
         $classname = 'OAuth2\ResponseType\AuthorizationCode';
         $options = array('storage' => 'authorization_code');
@@ -51,15 +56,17 @@ class AuthorizationCodeFactoryTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Tests UserCredentialsFactory->createService()
-     * @expectedException OAuth2Provider\Exception\InvalidServerException
+     * @expectedException \OAuth2Provider\Exception\InvalidServerException
      */
     public function testCreateServiceReturnsException()
     {
-        $mainSm = Bootstrap::getServiceManager()->setAllowOverride(true);
+        $mainSm = new ServiceManager();
 
         // seed the storage
-        $storageCont = $mainSm->get('OAuth2Provider/Containers/StorageContainer');
+        $storageCont = new StorageContainer();
         $storageCont['server1']['authorization_code'] = null;
+        $mainSm->setService('OAuth2Provider/Containers/StorageContainer', $storageCont);
+        $mainSm->setService('OAuth2Provider/Options/ResponseType/AuthorizationCode', new AuthorizationCodeConfigurations());
 
         $classname = 'OAuth2\ResponseType\AuthorizationCode';
         $options = array('storage' => 'authorization_code');

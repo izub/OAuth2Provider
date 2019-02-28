@@ -1,7 +1,13 @@
 <?php
 namespace OAuth2ProviderTests;
 
+use OAuth2\TokenType\Bearer;
+use OAuth2Provider\Containers\TokenTypeContainer;
+use OAuth2Provider\Options\ServerFeatureTypeConfiguration;
+use OAuth2Provider\Options\TokenType\BearerConfigurations;
 use OAuth2Provider\Service\Factory\ServerFeature\TokenTypeFactory;
+use OAuth2Provider\Service\Factory\TokenTypeStrategy\BearerFactory;
+use Zend\ServiceManager\ServiceManager;
 
 /**
  * TokenTypeFactory test case.
@@ -37,7 +43,11 @@ class TokenTypeFactoryTest extends \PHPUnit_Framework_TestCase
      */
     public function testCreateServiceWithConfigAsDirectName()
     {
-        $mainSm = Bootstrap::getServiceManager()->setAllowOverride(true);
+        $mainSm = new ServiceManager();
+        $mainSm->setService('OAuth2Provider/Containers/TokenTypeContainer', new TokenTypeContainer());
+        $mainSm->setService('OAuth2Provider/Options/TokenType/Bearer', new BearerConfigurations());
+        $mainSm->setService('OAuth2Provider/TokenTypeStrategy/Bearer', (new BearerFactory())->createService($mainSm));
+        $mainSm->setService('OAuth2Provider/Options/ServerFeatureType', new ServerFeatureTypeConfiguration());
         $config = 'bearer';
 
         $ser = $this->TokenTypeFactory->createService($mainSm);
@@ -51,7 +61,11 @@ class TokenTypeFactoryTest extends \PHPUnit_Framework_TestCase
      */
     public function testCreateServiceWithConfigAsDirectInsideArray()
     {
-        $mainSm = Bootstrap::getServiceManager()->setAllowOverride(true);
+        $mainSm = new ServiceManager();
+        $mainSm->setService('OAuth2Provider/Containers/TokenTypeContainer', new TokenTypeContainer());
+        $mainSm->setService('OAuth2Provider/Options/TokenType/Bearer', new BearerConfigurations());
+        $mainSm->setService('OAuth2Provider/TokenTypeStrategy/Bearer', (new BearerFactory())->createService($mainSm));
+        $mainSm->setService('OAuth2Provider/Options/ServerFeatureType', new ServerFeatureTypeConfiguration());
         $config = array('bearer');
 
         $ser = $this->TokenTypeFactory->createService($mainSm);
@@ -65,7 +79,11 @@ class TokenTypeFactoryTest extends \PHPUnit_Framework_TestCase
      */
     public function testCreateServiceWithConfigAsDirectWithNameInsideArray()
     {
-        $mainSm = Bootstrap::getServiceManager()->setAllowOverride(true);
+        $mainSm = new ServiceManager();
+        $mainSm->setService('OAuth2Provider/Containers/TokenTypeContainer', new TokenTypeContainer());
+        $mainSm->setService('OAuth2Provider/Options/TokenType/Bearer', new BearerConfigurations());
+        $mainSm->setService('OAuth2Provider/TokenTypeStrategy/Bearer', (new BearerFactory())->createService($mainSm));
+        $mainSm->setService('OAuth2Provider/Options/ServerFeatureType', new ServerFeatureTypeConfiguration());
         $config = array(
             'name' => 'bearer',
         );
@@ -81,7 +99,11 @@ class TokenTypeFactoryTest extends \PHPUnit_Framework_TestCase
      */
     public function testCreateServiceWithConfigAsArrayWithNameAndOptions()
     {
-        $mainSm = Bootstrap::getServiceManager()->setAllowOverride(true);
+        $mainSm = new ServiceManager();
+        $mainSm->setService('OAuth2Provider/Containers/TokenTypeContainer', new TokenTypeContainer());
+        $mainSm->setService('OAuth2Provider/Options/TokenType/Bearer', new BearerConfigurations());
+        $mainSm->setService('OAuth2Provider/TokenTypeStrategy/Bearer', (new BearerFactory())->createService($mainSm));
+        $mainSm->setService('OAuth2Provider/Options/ServerFeatureType', new ServerFeatureTypeConfiguration());
         $config = array(
             array(
                 'name' => 'bearer',
@@ -104,7 +126,11 @@ class TokenTypeFactoryTest extends \PHPUnit_Framework_TestCase
      */
     public function testCreateServiceWithConfigAsDirectWithNameAndOptions()
     {
-        $mainSm = Bootstrap::getServiceManager()->setAllowOverride(true);
+        $mainSm = new ServiceManager();
+        $mainSm->setService('OAuth2Provider/Containers/TokenTypeContainer', new TokenTypeContainer());
+        $mainSm->setService('OAuth2Provider/Options/TokenType/Bearer', new BearerConfigurations());
+        $mainSm->setService('OAuth2Provider/TokenTypeStrategy/Bearer', (new BearerFactory())->createService($mainSm));
+        $mainSm->setService('OAuth2Provider/Options/ServerFeatureType', new ServerFeatureTypeConfiguration());
         $config = array(
             'name' => 'bearer',
             'options' => array(
@@ -125,7 +151,11 @@ class TokenTypeFactoryTest extends \PHPUnit_Framework_TestCase
      */
     public function testCreateServiceWithConfigAsWithNameArrayInsideArray()
     {
-        $mainSm = Bootstrap::getServiceManager()->setAllowOverride(true);
+        $mainSm = new ServiceManager();
+        $mainSm->setService('OAuth2Provider/Containers/TokenTypeContainer', new TokenTypeContainer());
+        $mainSm->setService('OAuth2Provider/Options/TokenType/Bearer', new BearerConfigurations());
+        $mainSm->setService('OAuth2Provider/TokenTypeStrategy/Bearer', (new BearerFactory())->createService($mainSm));
+        $mainSm->setService('OAuth2Provider/Options/ServerFeatureType', new ServerFeatureTypeConfiguration());
         $config = array(
             array(
                 'name' => 'bearer'
@@ -143,7 +173,11 @@ class TokenTypeFactoryTest extends \PHPUnit_Framework_TestCase
      */
     public function testCreateServiceWithConfigAsWithNameArrayInsideArrayWithMultipleInputs()
     {
-        $mainSm = Bootstrap::getServiceManager()->setAllowOverride(true);
+        $mainSm = new ServiceManager();
+        $mainSm->setService('OAuth2Provider/Containers/TokenTypeContainer', new TokenTypeContainer());
+        $mainSm->setService('OAuth2Provider/Options/TokenType/Bearer', new BearerConfigurations());
+        $mainSm->setService('OAuth2Provider/TokenTypeStrategy/Bearer', (new BearerFactory())->createService($mainSm));
+        $mainSm->setService('OAuth2Provider/Options/ServerFeatureType', new ServerFeatureTypeConfiguration());
         $config = array(
             array(
                 'name' => 'bearer'
@@ -164,7 +198,11 @@ class TokenTypeFactoryTest extends \PHPUnit_Framework_TestCase
      */
     public function testCreateServiceWithConfigIsNull()
     {
-        $mainSm = Bootstrap::getServiceManager()->setAllowOverride(true);
+        $mainSm = new ServiceManager();
+        $mainSm->setService('OAuth2Provider/Containers/TokenTypeContainer', new TokenTypeContainer());
+        $mainSm->setService('OAuth2Provider/Options/TokenType/Bearer', new BearerConfigurations());
+        $mainSm->setService('OAuth2Provider/TokenTypeStrategy/Bearer', (new BearerFactory())->createService($mainSm));
+        $mainSm->setService('OAuth2Provider/Options/ServerFeatureType', new ServerFeatureTypeConfiguration());
         $config = null;
 
         $ser = $this->TokenTypeFactory->createService($mainSm);
@@ -178,7 +216,11 @@ class TokenTypeFactoryTest extends \PHPUnit_Framework_TestCase
      */
     public function testCreateServiceWithConfigIsEmpty()
     {
-        $mainSm = Bootstrap::getServiceManager()->setAllowOverride(true);
+        $mainSm = new ServiceManager();
+        $mainSm->setService('OAuth2Provider/Containers/TokenTypeContainer', new TokenTypeContainer());
+        $mainSm->setService('OAuth2Provider/Options/TokenType/Bearer', new BearerConfigurations());
+        $mainSm->setService('OAuth2Provider/TokenTypeStrategy/Bearer', (new BearerFactory())->createService($mainSm));
+        $mainSm->setService('OAuth2Provider/Options/ServerFeatureType', new ServerFeatureTypeConfiguration());
         $config = array();
 
         $ser = $this->TokenTypeFactory->createService($mainSm);

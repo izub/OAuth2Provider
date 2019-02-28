@@ -1,7 +1,10 @@
 <?php
 namespace OAuth2ProviderTests;
 
+use OAuth2Provider\Containers\StorageContainer;
+use OAuth2Provider\Options\GrantType\RefreshTokenConfigurations;
 use OAuth2Provider\Service\Factory\GrantTypeStrategy\RefreshTokenFactory;
+use Zend\ServiceManager\ServiceManager;
 
 /**
  * RefreshTokenFactory test case.
@@ -39,10 +42,14 @@ class RefreshTokenFactoryTest extends \PHPUnit_Framework_TestCase
      */
     public function testCreateService()
     {
-        $mainSm = Bootstrap::getServiceManager()->setAllowOverride(true);
+        $mainSm = new ServiceManager();
+
+        $storageCont = new StorageContainer();
         $options = array(
-            'refresh_token_storage' => new Assets\Storage\RefreshTokenStorage(),
+            'refresh_token_storage' => new \OAuth2ProviderTests\Assets\Storage\RefreshTokenStorage(),
         );
+        $mainSm->setService('OAuth2Provider/Containers/StorageContainer', $storageCont);
+        $mainSm->setService('OAuth2Provider/Options/GrantType/RefreshToken', new RefreshTokenConfigurations());
 
         $s = $this->RefreshTokenFactory->createService($mainSm);
         $r = $s('OAuth2\GrantType\RefreshToken', $options, 'server3');
@@ -51,14 +58,17 @@ class RefreshTokenFactoryTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Tests RefreshTokenFactory->createService()
-     * @expectedException OAuth2Provider\Exception\InvalidServerException
+     * @expectedException \OAuth2Provider\Exception\InvalidServerException
      */
     public function testCreateServiceReturnsException()
     {
-        $mainSm = Bootstrap::getServiceManager()->setAllowOverride(true);
+        $mainSm = new ServiceManager();
+        $storageCont = new StorageContainer();
         $options = array(
             'refresh_token_storage' => 'nothing',
         );
+        $mainSm->setService('OAuth2Provider/Containers/StorageContainer', $storageCont);
+        $mainSm->setService('OAuth2Provider/Options/GrantType/RefreshToken', new RefreshTokenConfigurations());
 
         $s = $this->RefreshTokenFactory->createService($mainSm);
         $s('OAuth2\GrantType\RefreshToken', $options, 'server3');

@@ -1,11 +1,16 @@
 <?php
 namespace OAuth2Provider\Controller;
 
-use Zend\View\Model\JsonModel;
+use OAuth2Provider\Server;
+use OAuth2Provider\ServerAwareInterface;
 use Zend\Mvc\Controller\AbstractRestfulController;
+use Zend\View\Model\JsonModel;
 
-class UserCredentialsController extends AbstractRestfulController implements ControllerInterface
+class UserCredentialsController extends AbstractRestfulController implements ControllerInterface, ServerAwareInterface
 {
+    /** @var Server */
+    private $server;
+
     public function authorizeAction()
     {
         return new JsonModel(array(
@@ -15,8 +20,7 @@ class UserCredentialsController extends AbstractRestfulController implements Con
 
     public function requestAction()
     {
-        $server   = $this->getServiceLocator()->get('oauth2provider.server.main');
-        $response = $server->handleTokenRequest();
+        $response = $this->server->handleTokenRequest();
         $params   = $response->getParameters();
 
         return new JsonModel($params);
@@ -24,9 +28,8 @@ class UserCredentialsController extends AbstractRestfulController implements Con
 
     public function resourceAction($scope = null)
     {
-        $server        = $this->getServiceLocator()->get('oauth2provider.server.main');
-        $isValid       = $server->verifyResourceRequest($scope);
-        $responseParam = $server->getResponse()->getParameters();
+        $isValid       = $this->server->verifyResourceRequest($scope);
+        $responseParam = $this->server->getResponse()->getParameters();
 
         $params = array();
         $params['success'] = $isValid;
@@ -39,5 +42,15 @@ class UserCredentialsController extends AbstractRestfulController implements Con
         }
 
         return new JsonModel($params);
+    }
+
+    /**
+     * Set the server instance
+     *
+     * @param Server $server
+     */
+    public function setServer(Server $server)
+    {
+        $this->server = $server;
     }
 }

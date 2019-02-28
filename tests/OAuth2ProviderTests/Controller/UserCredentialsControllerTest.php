@@ -3,13 +3,12 @@ namespace OAuth2ProviderTests;
 
 use OAuth2\Response as OAuth2Response;
 use OAuth2Provider\Controller\UserCredentialsController;
-use OAuth2Provider\Version;
+use OAuth2Provider\Server;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Zend\Http\Request;
-use Zend\Json\Json;
 use Zend\Mvc\MvcEvent;
 use Zend\Mvc\Router\Http\RouteMatch;
-use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\ServiceManager\ServiceManager;
 use Zend\View\Model\JsonModel;
 
@@ -21,7 +20,7 @@ class UserCredentialsControllerTest extends TestCase
     /**
      * @var UserCredentialsController
      */
-    private $UserCredentialsController;
+    private $object;
     /**
      * @var Request
      */
@@ -38,22 +37,26 @@ class UserCredentialsControllerTest extends TestCase
      * @var ServiceManager
      */
     private $serviceManager;
+    
+    /** @var Server|MockObject */
+    private $server;
 
     /**
      * Prepares the environment before running a test.
      */
     protected function setUp()
     {
-        $this->UserCredentialsController = new UserCredentialsController();
+        $this->object = new UserCredentialsController();
         $this->serviceManager = new ServiceManager();
         $this->serviceManager->setAlias('oauth2provider.server.main', 'oauth2provider.server.default');
-        $this->UserCredentialsController->setServiceLocator($this->serviceManager);
+        $this->server = $this->createMock(Server::class);
+        $this->object->setServer($this->server);
 
         $this->request = new Request();
         $this->routeMatch = new RouteMatch(['controller' => UserCredentialsController::class]);
         $this->event = new MvcEvent();
         $this->event->setRouteMatch($this->routeMatch);
-        $this->UserCredentialsController->setEvent($this->event);
+        $this->object->setEvent($this->event);
     }
 
     /**
@@ -61,7 +64,7 @@ class UserCredentialsControllerTest extends TestCase
      */
     protected function tearDown()
     {
-        $this->UserCredentialsController = null;
+        $this->object = null;
     }
 
     /**
@@ -72,7 +75,7 @@ class UserCredentialsControllerTest extends TestCase
     {
         $this->routeMatch->setParam('action', 'authorize');
         /** @var JsonModel $response */
-        $response = $this->UserCredentialsController->dispatch($this->request);
+        $response = $this->object->dispatch($this->request);
 
         $this->assertNotEmpty($response->getVariable('error'));
     }
@@ -91,21 +94,18 @@ class UserCredentialsControllerTest extends TestCase
             "refresh_token" => "f934c943a5f5d5a3f2db8889b2d734fd7ca4aa64",
             "refresh_expires_in" => "952659",
         );
-
-        $serverMock = $this->getMockBuilder('OAuth2Provider\Server')
-            ->setMethods(array('handleTokenRequest'))
-            ->getMock();
-        $serverMock->expects($this->once())
+        
+        $this->server->expects($this->once())
             ->method('handleTokenRequest')
             ->will($this->returnValue(new OAuth2Response($result)));
 
         // having set to server.default provides some sort if integration test
-        $this->serviceManager->setService('oauth2provider.server.default', $serverMock);
+        $this->serviceManager->setService('oauth2provider.server.default', $this->server);
 
         $this->routeMatch->setParam('action', 'request');
 
         /** @var JsonModel $response */
-        $response = $this->UserCredentialsController->dispatch($this->request);
+        $response = $this->object->dispatch($this->request);
         $this->assertSame($result, $response->getVariables());
     }
 
@@ -115,25 +115,22 @@ class UserCredentialsControllerTest extends TestCase
      */
     public function testResourceActionWhereRequestIsValid()
     {
-        $serverMock = $this->getMockBuilder('OAuth2Provider\Server')
-            ->setMethods(array('verifyResourceRequest', 'getResponse'))
-            ->getMock();
-        $serverMock->expects($this->once())
+        $this->server->expects($this->once())
             ->method('verifyResourceRequest')
             ->with($this->isNull())
             ->will($this->returnValue(true));
-        $serverMock->expects($this->once())
+        $this->server->expects($this->once())
             ->method('getResponse')
             ->will($this->returnValue(new OAuth2Response(array(
                 'success' => true
             ))));
 
         // having set to server.default provides some sort if integration test
-        $this->serviceManager->setService('oauth2provider.server.default', $serverMock);
+        $this->serviceManager->setService('oauth2provider.server.default', $this->server);
         $this->routeMatch->setParam('action', 'resource');
 
         /** @var JsonModel $response */
-        $response = $this->UserCredentialsController->dispatch($this->request);
+        $response = $this->object->dispatch($this->request);
 
         $this->assertEquals('Access Token is Valid!', $response->getVariable('message'));
     }
@@ -144,26 +141,23 @@ class UserCredentialsControllerTest extends TestCase
      */
     public function testResourceActionWhereRequestIsInValidWithErrorDescription()
     {
-        $serverMock = $this->getMockBuilder('OAuth2Provider\Server')
-            ->setMethods(array('verifyResourceRequest', 'getResponse'))
-            ->getMock();
-        $serverMock->expects($this->once())
+        $this->server->expects($this->once())
             ->method('verifyResourceRequest')
             ->with($this->isNull())
             ->will($this->returnValue(false));
-        $serverMock->expects($this->once())
+        $this->server->expects($this->once())
             ->method('getResponse')
             ->will($this->returnValue(new OAuth2Response(array(
                 'error'   => 'some error',
                 'error_description' => 'some message',
             ))));
 
-        $this->serviceManager->setService('oauth2provider.server.default', $serverMock);
+        $this->serviceManager->setService('oauth2provider.server.default', $this->server);
 
         $this->routeMatch->setParam('action', 'resource');
 
         /** @var JsonModel $response */
-        $response = $this->UserCredentialsController->dispatch($this->request);
+        $response = $this->object->dispatch($this->request);
         $this->assertFalse($response->getVariable('success'));
         $this->assertEquals('some error', $response->getVariable('error'));
         $this->assertEquals('some message', $response->getVariable('message'));
@@ -175,25 +169,22 @@ class UserCredentialsControllerTest extends TestCase
      */
     public function testResourceActionWhereRequestIsInValidWithErrorDefaultDescription()
     {
-        $serverMock = $this->getMockBuilder('OAuth2Provider\Server')
-            ->setMethods(array('verifyResourceRequest', 'getResponse'))
-            ->getMock();
-        $serverMock->expects($this->once())
+        $this->server->expects($this->once())
             ->method('verifyResourceRequest')
             ->with($this->isNull())
             ->will($this->returnValue(false));
-        $serverMock->expects($this->once())
+        $this->server->expects($this->once())
             ->method('getResponse')
             ->will($this->returnValue(new OAuth2Response(array(
                 'nonexistingkeyplaceholder'   => 'zXxXz',
             ))));
 
-        $this->serviceManager->setService('oauth2provider.server.default', $serverMock);
+        $this->serviceManager->setService('oauth2provider.server.default', $this->server);
 
         $this->routeMatch->setParam('action', 'resource');
 
         /** @var JsonModel $response */
-        $response = $this->UserCredentialsController->dispatch($this->request);
+        $response = $this->object->dispatch($this->request);
         $this->assertFalse($response->getVariable('success'));
         $this->assertEquals('Invalid Request', $response->getVariable('error'));
         $this->assertEquals('Access Token is invalid', $response->getVariable('message'));

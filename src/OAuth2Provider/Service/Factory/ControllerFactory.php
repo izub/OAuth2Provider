@@ -1,9 +1,9 @@
 <?php
 namespace OAuth2Provider\Service\Factory;
 
-use OAuth2Provider\Exception;
 use OAuth2Provider\Controller\ControllerInterface;
-
+use OAuth2Provider\Exception;
+use OAuth2Provider\ServerAwareInterface;
 use Zend\ServiceManager;
 
 class ControllerFactory implements ServiceManager\FactoryInterface
@@ -50,6 +50,11 @@ class ControllerFactory implements ServiceManager\FactoryInterface
         }
 
         $controller = new $controller();
+
+        if ($controller instanceof ServerAwareInterface) {
+            $server = $serviceLocator->getServiceLocator()->get('oauth2provider.server.main');
+            $controller->setServer($server);
+        }
 
         // check for valid controller
         if (!$controller instanceof ControllerInterface) {

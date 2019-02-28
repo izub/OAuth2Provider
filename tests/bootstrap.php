@@ -13,4 +13,18 @@ function __($s)
     return $s;
 }
 
-include 'vendor/autoload.php';
+function findParentPath($path)
+{
+    $dir = __DIR__;
+    $previousDir = '.';
+    while (!is_dir($dir . '/' . $path)) {
+        $dir = dirname($dir);
+        if ($previousDir === $dir) return false;
+        $previousDir = $dir;
+    }
+    return $dir . '/' . $path;
+}
+
+$vendorPath = findParentPath('vendor');
+
+include $vendorPath . '/autoload.php';

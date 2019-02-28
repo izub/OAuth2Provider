@@ -1,16 +1,20 @@
 {
-    "name": "franz-deleon/fdl-oauth2-provider",
+    "name": "izub/oauth2-provider",
     "type": "library",
-    "description": "ZF2 OAuth2 Provider module",
+    "description": "ZF3 OAuth2 Provider module",
     "keywords": [
         "OAuth2",
         "OAuth2 Module",
-        "Zend Framework 2",
-        "zf2 module"
+        "Zend Framework 3",
+        "zf3 module"
     ],
-    "homepage": "https://github.com/franz-deleon/OAuth2Provider",
+    "homepage": "https://github.com/izub/OAuth2Provider",
     "license": "MIT",
     "authors": [
+        {
+          "name": "Mark Zijlstra",
+          "email": "mark@bytecove.com"
+        },
         {
             "name": "Franz de Leon",
             "email": "franz_dl@yahoo.com"

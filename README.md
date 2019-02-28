@@ -1,19 +1,19 @@
-# OAuth 2 Provider Module for Zend Framework 2
-master:[![Build Status](https://travis-ci.org/franz-deleon/OAuth2Provider.png?branch=master)](https://travis-ci.org/franz-deleon/OAuth2Provider)
-develop:[![Build Status](https://travis-ci.org/franz-deleon/OAuth2Provider.png?branch=develop)](https://travis-ci.org/franz-deleon/OAuth2Provider)  
+# OAuth 2 Provider Module for Zend Framework 3
+master:[![Build Status](https://travis-ci.org/izub/OAuth2Provider.svg?branch=master)](https://travis-ci.org/izub/OAuth2Provider)
+develop:[![Build Status](https://travis-ci.org/izub/OAuth2Provider.svg?branch=develop)](https://travis-ci.org/izub/OAuth2Provider)  
 
-OAuth2Provider module integrates Brent Shaffer's [OAuth2 Server](https://github.com/bshaffer/oauth2-server-php) with Zend Framework 2 easily.
+OAuth2Provider module integrates Brent Shaffer's [OAuth2 Server](https://github.com/bshaffer/oauth2-server-php) with Zend Framework 3 easily.
 
 ## Installation
 
 1. Easiest is through composer.
     ```sh
-    php composer.phar require franz-deleon/fdl-oauth2-provider
+    php composer.phar require izub/oauth2-provider
     ```
     or in composer.json
     ```
     "require": {
-        "franz-deleon/fdl-oauth2-provider": "dev-master"
+        "izub/oauth2-provider": "dev-master"
     }
     ```
     then run `composer update`
